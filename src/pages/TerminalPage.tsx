@@ -11,18 +11,13 @@ interface TerminalOutput {
 
 export function TerminalPage() {
   const { locale } = useTranslation();
-  const [history, setHistory] = useState<TerminalOutput[]>([
-    {
-      type: "output",
-      content: locale === "es" 
-        ? "¡Bienvenido a Pinguiñoño Terminal!\nEsta es una terminal REAL de tu sistema Linux.\nEscribe 'help' para ver comandos sugeridos.\n"
-        : "Welcome to Pinguiñoño Terminal!\nThis is a REAL terminal from your Linux system.\nType 'help' for suggested commands.\n",
-    },
-  ]);
+  const [history, setHistory] = useState<TerminalOutput[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [currentPath, setCurrentPath] = useState("~");
+  const [username, setUsername] = useState("user");
+  const [hostname, setHostname] = useState("pinguinono");
   const [isExecuting, setIsExecuting] = useState(false);
   
   const inputRef = useRef<HTMLInputElement>(null);
@@ -36,16 +31,42 @@ export function TerminalPage() {
 
   useEffect(() => {
     inputRef.current?.focus();
-    updatePath();
+    initTerminal();
   }, []);
+
+  const initTerminal = async () => {
+    try {
+      const [user, host, path] = await Promise.all([
+        invoke<string>("get_username"),
+        invoke<string>("get_hostname"),
+        invoke<string>("get_current_directory"),
+      ]);
+      setUsername(user);
+      setHostname(host);
+      setCurrentPath(path);
+      
+      setHistory([{
+        type: "output",
+        content: locale === "es" 
+          ? `¡Bienvenido a Pinguiñoño Terminal, ${user}!\nEsta es una terminal REAL de tu sistema Linux.\nEscribe 'help' para ver comandos sugeridos.\n`
+          : `Welcome to Pinguiñoño Terminal, ${user}!\nThis is a REAL terminal from your Linux system.\nType 'help' for suggested commands.\n`,
+      }]);
+    } catch {
+      setHistory([{
+        type: "output",
+        content: locale === "es" 
+          ? "¡Bienvenido a Pinguiñoño Terminal!\nEscribe 'help' para ver comandos sugeridos.\n"
+          : "Welcome to Pinguiñoño Terminal!\nType 'help' for suggested commands.\n",
+      }]);
+    }
+  };
 
   const updatePath = async () => {
     try {
-      const result = await invoke<string>("execute_command", { command: "pwd" });
-      const path = result.trim().replace(/^\/home\/[^/]+/, "~");
+      const path = await invoke<string>("get_current_directory");
       setCurrentPath(path);
     } catch {
-      setCurrentPath("~");
+      // Keep current path
     }
   };
 
@@ -57,9 +78,10 @@ export function TerminalPage() {
     setHistoryIndex(-1);
     setIsExecuting(true);
 
+    const prompt = `${username}@${hostname}:${currentPath}$`;
     setHistory((prev) => [
       ...prev,
-      { type: "input", content: `${currentPath}$ ${trimmedCommand}` },
+      { type: "input", content: `${prompt} ${trimmedCommand}` },
     ]);
 
     if (trimmedCommand === "clear") {
@@ -118,7 +140,8 @@ export function TerminalPage() {
         setHistory((prev) => [...prev, { type: "output", content: result }]);
       }
       
-      if (trimmedCommand.startsWith("cd ")) {
+      // Update path after cd or any command that might change directory
+      if (trimmedCommand.startsWith("cd ") || trimmedCommand === "cd") {
         await updatePath();
       }
     } catch (error) {
@@ -157,9 +180,10 @@ export function TerminalPage() {
         }
       }
     } else if (e.key === "c" && e.ctrlKey) {
+      const prompt = `${username}@${hostname}:${currentPath}$`;
       setHistory((prev) => [
         ...prev,
-        { type: "input", content: `${currentPath}$ ${inputValue}^C` },
+        { type: "input", content: `${prompt} ${inputValue}^C` },
       ]);
       setInputValue("");
     } else if (e.key === "l" && e.ctrlKey) {
@@ -244,7 +268,10 @@ export function TerminalPage() {
 
               {/* Input line */}
               <div className="flex items-center">
-                <span className="text-blue-400">{currentPath}$ </span>
+                <span className="text-green-400">{username}@{hostname}</span>
+                <span className="text-white">:</span>
+                <span className="text-blue-400">{currentPath}</span>
+                <span className="text-white">$ </span>
                 <input
                   ref={inputRef}
                   type="text"
