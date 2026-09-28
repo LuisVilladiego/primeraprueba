@@ -6,3 +6,4 @@ export { LabsPage } from "./LabsPage";
 export { LabPage } from "./LabPage";
 export { ExamPage } from "./ExamPage";
 export { TerminalPage } from "./TerminalPage";
+export { PlaceholderPage } from "./PlaceholderPage";
