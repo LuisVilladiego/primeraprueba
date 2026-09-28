@@ -12,10 +12,22 @@ import { useProgressStore } from "@/stores/progressStore";
 import { useUserStore } from "@/stores/userStore";
 import { level0Lessons } from "@/content/modules/level-0";
 import { lesson01 } from "@/content/modules/level-0/lessons/lesson-0-1";
+import { lesson02 } from "@/content/modules/level-0/lessons/lesson-0-2";
+import { lesson03 } from "@/content/modules/level-0/lessons/lesson-0-3";
+import { lesson04 } from "@/content/modules/level-0/lessons/lesson-0-4";
+import { lesson05 } from "@/content/modules/level-0/lessons/lesson-0-5";
+import { lesson06 } from "@/content/modules/level-0/lessons/lesson-0-6";
+import { lesson07 } from "@/content/modules/level-0/lessons/lesson-0-7";
 import { ArrowLeft, ArrowRight, Clock, CheckCircle2 } from "lucide-react";
 
 const lessonsData: Record<string, typeof lesson01> = {
   "what-is-a-computer": lesson01,
+  "what-is-an-operating-system": lesson02,
+  "processes-and-memory": lesson03,
+  "storage-and-files": lesson04,
+  "user-interfaces": lesson05,
+  "linux-history": lesson06,
+  "linux-vs-windows-vs-macos": lesson07,
 };
 
 export default function LessonPage() {

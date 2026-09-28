@@ -32,7 +32,7 @@ const navItems = [
   { divider: true },
   { key: "search", href: "/search", icon: Search },
   { key: "dictionary", href: "/dictionary", icon: BookText },
-  { key: "commands", href: "/commands", icon: Terminal },
+  { key: "terminal", href: "/terminal", icon: Terminal },
   { divider: true },
   { key: "achievements", href: "/achievements", icon: Trophy },
   { key: "certificates", href: "/certificates", icon: Award },
