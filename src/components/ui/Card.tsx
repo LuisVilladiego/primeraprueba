@@ -1,16 +1,19 @@
-
-
 import { cn } from "@/lib/utils";
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
+  hover?: boolean;
+  animate?: boolean;
 }
 
-export function Card({ className, children, ...props }: CardProps) {
+export function Card({ className, children, hover = false, animate = false, ...props }: CardProps) {
   return (
     <div
       className={cn(
         "rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900",
+        "transition-all duration-200 ease-out",
+        hover && "hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700 hover:-translate-y-0.5",
+        animate && "animate-[fade-in-up_0.4s_ease-out]",
         className
       )}
       {...props}

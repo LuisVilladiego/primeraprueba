@@ -76,7 +76,7 @@ export function ProfilePage() {
   return (
     <div className="mx-auto max-w-4xl">
       {/* Profile Header */}
-      <Card className="mb-6 p-6">
+      <Card className="mb-6 p-6 animate-[fade-in-up_0.4s_ease-out]">
         <div className="flex items-center gap-6">
           <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600">
             <User className="h-12 w-12 text-white" />
@@ -152,8 +152,13 @@ export function ProfilePage() {
 
       {/* Stats Grid */}
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((stat) => (
-          <Card key={stat.label} className="p-4">
+        {statCards.map((stat, index) => (
+          <Card 
+            key={stat.label} 
+            hover 
+            className="p-4 animate-[fade-in-up_0.4s_ease-out_both]"
+            style={{ animationDelay: `${0.1 + index * 0.05}s` }}
+          >
             <div className="flex items-center gap-3">
               <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${stat.bg}`}>
                 <stat.icon className={`h-6 w-6 ${stat.color}`} />
@@ -171,7 +176,7 @@ export function ProfilePage() {
 
       {/* Progress Overview */}
       <div className="grid gap-6 md:grid-cols-2">
-        <Card>
+        <Card className="animate-[fade-in-up_0.4s_ease-out_0.3s_both]">
           <CardHeader>
             <CardTitle>
               {locale === "es" ? "Progreso por Nivel" : "Progress by Level"}
@@ -204,7 +209,7 @@ export function ProfilePage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-[fade-in-up_0.4s_ease-out_0.35s_both]">
           <CardHeader>
             <CardTitle>
               {locale === "es" ? "Tiempo de Estudio" : "Study Time"}

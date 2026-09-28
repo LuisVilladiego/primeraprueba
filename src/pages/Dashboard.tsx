@@ -54,7 +54,7 @@ export function Dashboard() {
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       {/* Welcome */}
-      <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
+      <div className="animate-[fade-in-up_0.4s_ease-out] rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
         <div className="flex items-center gap-2">
           <Sparkles className="h-6 w-6" />
           <h1 className="text-2xl font-bold">
@@ -70,7 +70,7 @@ export function Dashboard() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Progress Overview */}
-        <Card className="col-span-full lg:col-span-1">
+        <Card hover className="col-span-full lg:col-span-1 animate-[fade-in-up_0.4s_ease-out_0.1s_both]">
           <CardHeader>
             <CardTitle>{t("dashboard.overallProgress")}</CardTitle>
           </CardHeader>
@@ -100,7 +100,7 @@ export function Dashboard() {
         </Card>
 
         {/* Stats Cards */}
-        <Card>
+        <Card hover className="animate-[fade-in-up_0.4s_ease-out_0.2s_both]">
           <CardHeader>
             <CardTitle>{t("dashboard.labsCompleted")}</CardTitle>
           </CardHeader>
@@ -121,7 +121,7 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card hover className="animate-[fade-in-up_0.4s_ease-out_0.3s_both]">
           <CardHeader>
             <CardTitle>{t("dashboard.examsPassed")}</CardTitle>
           </CardHeader>
@@ -144,7 +144,7 @@ export function Dashboard() {
       </div>
 
       {/* Next Objectives */}
-      <Card>
+      <Card className="animate-[fade-in-up_0.4s_ease-out_0.4s_both]">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Target className="h-5 w-5" />
@@ -155,7 +155,7 @@ export function Dashboard() {
           <div className="space-y-4">
             {objectives.map((obj, index) => (
               <Link key={index} to={obj.href}>
-                <div className="flex items-center gap-4 rounded-lg border border-zinc-200 p-4 transition-all hover:border-blue-300 hover:shadow-sm dark:border-zinc-700 dark:hover:border-blue-700">
+                <div className="flex items-center gap-4 rounded-lg border border-zinc-200 p-4 transition-all duration-200 hover:border-blue-300 hover:shadow-md hover:-translate-y-0.5 dark:border-zinc-700 dark:hover:border-blue-700">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
                     <obj.icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
@@ -181,7 +181,7 @@ export function Dashboard() {
       </Card>
 
       {/* Quick Action */}
-      <div className="flex justify-center">
+      <div className="flex justify-center animate-[fade-in-up_0.4s_ease-out_0.5s_both]">
         <Link to="/courses/level-0">
           <Button variant="primary" size="lg">
             {t("dashboard.continueStudying")}

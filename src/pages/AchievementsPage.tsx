@@ -23,7 +23,7 @@ export function AchievementsPage() {
   return (
     <div className="mx-auto max-w-4xl">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-8 animate-[fade-in-up_0.4s_ease-out]">
         <div className="flex items-center gap-4">
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-yellow-400 to-orange-500">
             <Trophy className="h-8 w-8 text-white" />
@@ -42,7 +42,7 @@ export function AchievementsPage() {
       </div>
 
       {/* Progress Overview */}
-      <Card className="mb-8 p-6">
+      <Card className="mb-8 p-6 animate-[fade-in-up_0.4s_ease-out_0.1s_both]">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
@@ -62,26 +62,31 @@ export function AchievementsPage() {
       </Card>
 
       {/* Achievements by Category */}
-      {categories.map((category) => {
+      {categories.map((category, categoryIndex) => {
         const categoryAchievements = achievements.filter(
           (a) => a.category === category.id
         );
 
         return (
-          <div key={category.id} className="mb-8">
+          <div 
+            key={category.id} 
+            className="mb-8 animate-[fade-in-up_0.4s_ease-out_both]"
+            style={{ animationDelay: `${0.2 + categoryIndex * 0.1}s` }}
+          >
             <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-zinc-900 dark:text-white">
               <span>{category.icon}</span>
               {category.title}
             </h2>
             
             <div className="grid gap-4 sm:grid-cols-2">
-              {categoryAchievements.map((achievement) => {
+              {categoryAchievements.map((achievement, index) => {
                 const isUnlocked = unlockedAchievements.includes(achievement.id);
                 
                 return (
                   <Card 
                     key={achievement.id}
-                    className={`p-4 transition-all ${
+                    hover
+                    className={`p-4 transition-all duration-200 ${
                       isUnlocked 
                         ? "border-yellow-200 bg-yellow-50/50 dark:border-yellow-800/30 dark:bg-yellow-900/10" 
                         : "opacity-75"

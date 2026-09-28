@@ -83,7 +83,7 @@ export function CommandsPage() {
   return (
     <div className="mx-auto max-w-4xl">
       {/* Header */}
-      <div className="mb-6">
+      <div className="mb-6 animate-[fade-in-up_0.4s_ease-out]">
         <div className="flex items-center gap-4">
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600">
             <Terminal className="h-7 w-7 text-white" />
@@ -102,7 +102,7 @@ export function CommandsPage() {
       </div>
 
       {/* Search and Filters */}
-      <Card className="mb-6 p-4">
+      <Card className="mb-6 p-4 animate-[fade-in-up_0.4s_ease-out_0.1s_both]">
         <div className="flex flex-col gap-4 sm:flex-row">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
@@ -134,8 +134,8 @@ export function CommandsPage() {
 
       {/* Commands List */}
       <div className="space-y-4">
-        {filteredCommands.map((cmd) => (
-          <Card key={cmd.name} className="p-4">
+        {filteredCommands.map((cmd, index) => (
+          <Card key={cmd.name} hover className="p-4 animate-[fade-in-up_0.3s_ease-out_both]" style={{ animationDelay: `${0.15 + Math.min(index, 5) * 0.05}s` }}>
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-3">
@@ -198,7 +198,7 @@ export function CommandsPage() {
       </div>
 
       {/* Link to Terminal */}
-      <Card className="mt-6 p-4">
+      <Card hover className="mt-6 p-4 animate-[fade-in-up_0.4s_ease-out_0.4s_both]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Terminal className="h-5 w-5 text-green-500" />
