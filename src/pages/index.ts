@@ -7,3 +7,6 @@ export { LabPage } from "./LabPage";
 export { ExamPage } from "./ExamPage";
 export { TerminalPage } from "./TerminalPage";
 export { PlaceholderPage } from "./PlaceholderPage";
+export { AchievementsPage } from "./AchievementsPage";
+export { ProfilePage } from "./ProfilePage";
+export { CommandsPage } from "./CommandsPage";

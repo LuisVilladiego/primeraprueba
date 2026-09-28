@@ -10,6 +10,9 @@ import { LabPage } from "./pages/LabPage";
 import { ExamPage } from "./pages/ExamPage";
 import { TerminalPage } from "./pages/TerminalPage";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
+import { AchievementsPage } from "./pages/AchievementsPage";
+import { ProfilePage } from "./pages/ProfilePage";
+import { CommandsPage } from "./pages/CommandsPage";
 
 function App() {
   return (
@@ -24,13 +27,14 @@ function App() {
           <Route path="/courses/level-0/labs/:slug" element={<LabPage />} />
           <Route path="/exams/level-0" element={<ExamPage />} />
           <Route path="/terminal" element={<TerminalPage />} />
+          <Route path="/achievements" element={<AchievementsPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/commands" element={<CommandsPage />} />
           {/* Placeholder pages */}
           <Route path="/projects" element={<PlaceholderPage title="Proyectos" />} />
           <Route path="/search" element={<PlaceholderPage title="Buscar" />} />
           <Route path="/dictionary" element={<PlaceholderPage title="Diccionario" />} />
-          <Route path="/achievements" element={<PlaceholderPage title="Logros" />} />
           <Route path="/certificates" element={<PlaceholderPage title="Certificados" />} />
-          <Route path="/profile" element={<PlaceholderPage title="Perfil" />} />
         </Route>
       </Routes>
     </ThemeProvider>
