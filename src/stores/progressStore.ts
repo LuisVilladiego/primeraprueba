@@ -15,6 +15,7 @@ interface ProgressEntry {
 
 interface ProgressState {
   progress: Record<string, ProgressEntry>;
+  passedExams: string[];
   getProgress: (entityType: EntityType, entityId: string) => ProgressEntry | null;
   setProgress: (entry: ProgressEntry) => void;
   updateProgress: (
@@ -27,14 +28,10 @@ interface ProgressState {
   markAsMastered: (entityType: EntityType, entityId: string) => void;
   addTimeSpent: (entityType: EntityType, entityId: string, seconds: number) => void;
   incrementAttempts: (entityType: EntityType, entityId: string) => void;
-  getModuleProgress: (moduleId: string, lessonIds: string[], exerciseIds: string[], labIds: string[]) => {
-    lessons: { completed: number; total: number; percentage: number };
-    exercises: { completed: number; total: number; percentage: number };
-    labs: { completed: number; total: number; percentage: number };
-    overall: number;
-  };
+  getModuleProgress: (moduleId: string) => number;
   isModuleCompleted: (moduleId: string) => boolean;
-  isExamPassed: (examId: string, passingScore: number) => boolean;
+  isExamPassed: (examId: string) => boolean;
+  setExamPassed: (examId: string) => void;
 }
 
 const createKey = (entityType: EntityType, entityId: string) => `${entityType}:${entityId}`;
@@ -43,6 +40,7 @@ export const useProgressStore = create<ProgressState>()(
   persist(
     (set, get) => ({
       progress: {},
+      passedExams: [],
 
       getProgress: (entityType, entityId) => {
         const key = createKey(entityType, entityId);
@@ -184,56 +182,23 @@ export const useProgressStore = create<ProgressState>()(
         });
       },
 
-      getModuleProgress: (moduleId, lessonIds, exerciseIds, labIds) => {
+      getModuleProgress: (moduleId) => {
         const state = get();
+        const lessonIds = moduleId === "level-0" 
+          ? ["lesson-0-1", "lesson-0-2", "lesson-0-3", "lesson-0-4", "lesson-0-5", "lesson-0-6", "lesson-0-7"]
+          : [];
         
-        const countCompleted = (entityType: EntityType, ids: string[]) => {
-          let completed = 0;
-          for (const id of ids) {
-            const progress = state.getProgress(entityType, id);
-            if (progress && (progress.status === "COMPLETED" || progress.status === "MASTERED")) {
-              completed++;
-            }
+        let completed = 0;
+        for (const id of lessonIds) {
+          const progress = state.getProgress("LESSON", id);
+          if (progress && (progress.status === "COMPLETED" || progress.status === "MASTERED")) {
+            completed++;
           }
-          return completed;
-        };
-
-        const lessonsCompleted = countCompleted("LESSON", lessonIds);
-        const exercisesCompleted = countCompleted("EXERCISE", exerciseIds);
-        const labsCompleted = countCompleted("LAB", labIds);
-
-        const lessonsPercentage = lessonIds.length > 0 
-          ? Math.round((lessonsCompleted / lessonIds.length) * 100) 
-          : 100;
-        const exercisesPercentage = exerciseIds.length > 0 
-          ? Math.round((exercisesCompleted / exerciseIds.length) * 100) 
-          : 100;
-        const labsPercentage = labIds.length > 0 
-          ? Math.round((labsCompleted / labIds.length) * 100) 
-          : 100;
-
-        const overall = Math.round(
-          (lessonsPercentage + exercisesPercentage + labsPercentage) / 3
-        );
-
-        return {
-          lessons: {
-            completed: lessonsCompleted,
-            total: lessonIds.length,
-            percentage: lessonsPercentage,
-          },
-          exercises: {
-            completed: exercisesCompleted,
-            total: exerciseIds.length,
-            percentage: exercisesPercentage,
-          },
-          labs: {
-            completed: labsCompleted,
-            total: labIds.length,
-            percentage: labsPercentage,
-          },
-          overall,
-        };
+        }
+        
+        return lessonIds.length > 0 
+          ? Math.round((completed / lessonIds.length) * 100) 
+          : 0;
       },
 
       isModuleCompleted: (moduleId) => {
@@ -241,9 +206,16 @@ export const useProgressStore = create<ProgressState>()(
         return progress?.status === "COMPLETED" || progress?.status === "MASTERED";
       },
 
-      isExamPassed: (examId, passingScore) => {
-        const progress = get().getProgress("EXAM", examId);
-        return progress?.status === "COMPLETED" && (progress.score || 0) >= passingScore;
+      isExamPassed: (examId) => {
+        return get().passedExams.includes(examId);
+      },
+
+      setExamPassed: (examId) => {
+        set((state) => ({
+          passedExams: state.passedExams.includes(examId) 
+            ? state.passedExams 
+            : [...state.passedExams, examId],
+        }));
       },
     }),
     {

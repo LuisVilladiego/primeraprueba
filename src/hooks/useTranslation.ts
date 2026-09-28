@@ -1,5 +1,3 @@
-"use client";
-
 import { useCallback } from "react";
 import { useSettingsStore } from "@/stores/settingsStore";
 import type { Locale, BilingualText } from "@/types";

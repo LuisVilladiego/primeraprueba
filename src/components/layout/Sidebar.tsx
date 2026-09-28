@@ -1,7 +1,4 @@
-"use client";
-
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useSettingsStore } from "@/stores/settingsStore";
 import { cn } from "@/lib/utils";
@@ -25,9 +22,9 @@ import {
 const navItems = [
   { key: "dashboard", href: "/", icon: LayoutDashboard },
   { key: "roadmap", href: "/roadmap", icon: Map },
-  { key: "courses", href: "/courses", icon: BookOpen },
-  { key: "labs", href: "/labs", icon: FlaskConical },
-  { key: "exams", href: "/exams", icon: GraduationCap },
+  { key: "courses", href: "/courses/level-0", icon: BookOpen },
+  { key: "labs", href: "/courses/level-0/labs", icon: FlaskConical },
+  { key: "exams", href: "/exams/level-0", icon: GraduationCap },
   { key: "projects", href: "/projects", icon: FolderKanban },
   { divider: true },
   { key: "search", href: "/search", icon: Search },
@@ -40,7 +37,7 @@ const navItems = [
 ] as const;
 
 export function Sidebar() {
-  const pathname = usePathname();
+  const location = useLocation();
   const { t } = useTranslation();
   const { sidebarCollapsed, toggleSidebar } = useSettingsStore();
 
@@ -54,7 +51,7 @@ export function Sidebar() {
       {/* Logo */}
       <div className="flex h-16 items-center justify-between border-b border-zinc-200 px-4 dark:border-zinc-800">
         {!sidebarCollapsed && (
-          <Link href="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <img 
               src="/images/logo.jpg" 
               alt="Pinguiñoño" 
@@ -87,12 +84,12 @@ export function Sidebar() {
             }
 
             const Icon = item.icon;
-            const isActive = pathname === item.href;
+            const isActive = location.pathname === item.href;
 
             return (
               <li key={item.key}>
                 <Link
-                  href={item.href}
+                  to={item.href}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                     isActive
@@ -102,7 +99,7 @@ export function Sidebar() {
                   )}
                   title={sidebarCollapsed ? t(`nav.${item.key}`) : undefined}
                 >
-                  <Icon className="h-5 w-5 flex-shrink-0" />
+                  <Icon className="h-5 w-5 shrink-0" />
                   {!sidebarCollapsed && (
                     <span>{t(`nav.${item.key}`)}</span>
                   )}

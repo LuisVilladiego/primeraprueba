@@ -1,7 +1,17 @@
-import type { Locale } from "@/types";
+export type Locale = "es" | "en";
 
 export const defaultLocale: Locale = "es";
-export const locales: Locale[] = ["es", "en"];
+
+export interface LocaleInfo {
+  code: Locale;
+  name: string;
+  flag: string;
+}
+
+export const locales: LocaleInfo[] = [
+  { code: "es", name: "Español", flag: "🇪🇸" },
+  { code: "en", name: "English", flag: "🇺🇸" },
+];
 
 export const localeNames: Record<Locale, string> = {
   es: "Español",
@@ -14,5 +24,5 @@ export const localeFlags: Record<Locale, string> = {
 };
 
 export function isValidLocale(locale: string): locale is Locale {
-  return locales.includes(locale as Locale);
+  return ["es", "en"].includes(locale);
 }

@@ -1,29 +1,25 @@
-"use client";
-
+import { Outlet } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import { useSettingsStore } from "@/stores/settingsStore";
 import { cn } from "@/lib/utils";
 
-interface MainLayoutProps {
-  children: React.ReactNode;
-  title?: string;
-}
-
-export function MainLayout({ children, title }: MainLayoutProps) {
+export function MainLayout() {
   const { sidebarCollapsed } = useSettingsStore();
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+    <div className="flex min-h-screen bg-zinc-50 dark:bg-zinc-900">
       <Sidebar />
       <div
         className={cn(
-          "transition-all duration-300",
+          "flex flex-1 flex-col transition-all duration-300",
           sidebarCollapsed ? "ml-16" : "ml-64"
         )}
       >
-        <Header title={title} />
-        <main className="p-6">{children}</main>
+        <Header />
+        <main className="flex-1 p-6">
+          <Outlet />
+        </main>
       </div>
     </div>
   );

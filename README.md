@@ -8,63 +8,76 @@
   <strong>Aprende Linux Fácil</strong>
 </p>
 
+<p align="center">
+  Aplicación de escritorio para Linux
+</p>
+
 ## Descripción
 
-Pinguiñoño es una plataforma educativa completa para aprender Linux y tecnologías relacionadas, desde los fundamentos hasta nivel profesional. Diseñada con metodología de academia técnica que prioriza el entendimiento sobre la memorización.
+Pinguiñoño es una aplicación de escritorio nativa para Linux que te enseña Linux, Cloud y DevOps de forma interactiva. Incluye una **terminal real** conectada a tu sistema.
 
 ## Características
 
-- **Dashboard interactivo** con progreso general, estadísticas y próximos objetivos
+- **Aplicación de escritorio nativa** - Construida con Tauri (Rust + React)
+- **Terminal REAL** - Ejecuta comandos reales en tu sistema Linux
+- **Dashboard interactivo** con progreso, estadísticas y objetivos
 - **Roadmap visual** con 16 niveles desde Fundamentos hasta Kubernetes
 - **Sistema bilingüe** completo (Español/Inglés)
 - **Lecciones multimodales** con texto, diagramas, ejercicios y quizzes
 - **Sistema de exámenes** con bloqueo de niveles
-- **Terminal de práctica** para aprender comandos Linux
-- **Laboratorios prácticos** con guías paso a paso
-- **Persistencia de progreso** local
+- **Laboratorios prácticos** guiados
 - **Gamificación** con XP, niveles y rachas de estudio
 
 ## Tecnologías
 
-- **Frontend**: Next.js 16 + TypeScript
+- **Backend**: Tauri 2 (Rust)
+- **Frontend**: React 19 + TypeScript + Vite
 - **Estilos**: Tailwind CSS v4
 - **Estado**: Zustand (con persistencia)
-- **Base de datos**: Prisma 7 + SQLite
-- **UI**: Componentes personalizados con diseño moderno
+- **Router**: React Router v7
+
+## Requisitos
+
+- Linux (Ubuntu 22.04+, Fedora 38+, o similar)
+- Node.js 18+
+- Rust 1.70+
+- Dependencias del sistema:
+  ```bash
+  # Ubuntu/Debian
+  sudo apt install libwebkit2gtk-4.1-dev librsvg2-dev libgtk-3-dev
+  
+  # Fedora
+  sudo dnf install webkit2gtk4.1-devel librsvg2-devel gtk3-devel
+  ```
 
 ## Instalación
 
 ```bash
-# Instalar dependencias
+# Instalar dependencias de Node
 npm install
 
-# Configurar base de datos
-npx prisma db push
-
 # Ejecutar en desarrollo
-npm run dev
+npm run tauri dev
+
+# Construir para producción
+npm run tauri build
 ```
 
 ## Estructura del Proyecto
 
 ```
-src/
-├── app/                  # Páginas Next.js (App Router)
-├── components/           # Componentes React
-│   ├── ui/              # Componentes base
-│   ├── layout/          # Layout y navegación
-│   ├── dashboard/       # Dashboard
-│   ├── learning/        # Lecciones
-│   ├── exam/            # Exámenes
-│   ├── terminal/        # Terminal simulada
-│   └── roadmap/         # Roadmap visual
-├── content/             # Contenido educativo
-│   └── modules/         # Módulos por nivel
-├── hooks/               # Custom hooks
-├── i18n/                # Internacionalización
-├── lib/                 # Utilidades
-├── stores/              # Estado global (Zustand)
-└── types/               # Tipos TypeScript
+├── src/                  # Frontend React
+│   ├── components/       # Componentes React
+│   ├── pages/           # Páginas de la app
+│   ├── content/         # Contenido educativo
+│   ├── stores/          # Estado global (Zustand)
+│   ├── hooks/           # Custom hooks
+│   ├── i18n/            # Traducciones
+│   └── types/           # Tipos TypeScript
+├── src-tauri/           # Backend Rust
+│   ├── src/             # Código Rust
+│   └── Cargo.toml       # Dependencias Rust
+└── public/              # Archivos estáticos
 ```
 
 ## Niveles Disponibles
@@ -73,26 +86,12 @@ src/
 |-------|------|--------|
 | 0 | Fundamentos de Computación | ✅ Completo |
 | 1 | Linux Fundamentals | 🔜 Próximamente |
-| 2 | Administración Linux | 🔜 Próximamente |
-| 3 | Networking | 🔜 Próximamente |
-| 4 | SSH | 🔜 Próximamente |
-| 5 | Git & GitHub | 🔜 Próximamente |
-| 6 | Bash Scripting | 🔜 Próximamente |
-| 7 | Docker | 🔜 Próximamente |
-| 8 | Web Servers (Nginx) | 🔜 Próximamente |
-| 9 | PostgreSQL | 🔜 Próximamente |
-| 10 | Seguridad Linux | 🔜 Próximamente |
-| 11 | Cloud (AWS) | 🔜 Próximamente |
-| 12 | CI/CD | 🔜 Próximamente |
-| 13 | DevOps | 🔜 Próximamente |
-| 14 | Terraform | 🔜 Próximamente |
-| 15 | Kubernetes | 🔜 Próximamente |
+| 2-15 | ... | 🔜 Próximamente |
 
 ## Documentación
 
 - [Arquitectura](./docs/ARCHITECTURE.md)
 - [Roadmap Educativo](./docs/LEARNING_ROADMAP.md)
-- [Checklist de Implementación](./docs/IMPLEMENTATION_CHECKLIST.md)
 
 ## Licencia
 

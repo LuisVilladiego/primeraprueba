@@ -1,4 +1,4 @@
-"use client";
+
 
 import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -12,6 +12,8 @@ const badgeVariants = cva(
           "bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-100",
         primary:
           "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+        secondary:
+          "bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300",
         success:
           "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
         warning:

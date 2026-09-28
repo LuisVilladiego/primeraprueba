@@ -1,4 +1,4 @@
-"use client";
+
 
 import { cn } from "@/lib/utils";
 
@@ -78,6 +78,7 @@ interface ProgressRingProps {
   strokeWidth?: number;
   showLabel?: boolean;
   className?: string;
+  children?: React.ReactNode;
 }
 
 export function ProgressRing({
@@ -87,6 +88,7 @@ export function ProgressRing({
   strokeWidth = 8,
   showLabel = true,
   className,
+  children,
 }: ProgressRingProps) {
   const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
   const radius = (size - strokeWidth) / 2;
@@ -118,11 +120,13 @@ export function ProgressRing({
           cy={size / 2}
         />
       </svg>
-      {showLabel && (
+      {children ? (
+        <div className="absolute">{children}</div>
+      ) : showLabel ? (
         <span className="absolute text-2xl font-bold text-zinc-900 dark:text-zinc-50">
           {Math.round(percentage)}%
         </span>
-      )}
+      ) : null}
     </div>
   );
 }
