@@ -1,10 +1,16 @@
-# Linux Academy
+# Pinguiñoño
 
-Tu academia personal de Linux, Cloud y DevOps.
+<p align="center">
+  <img src="public/images/logo.jpg" alt="Pinguiñoño Logo" width="200" />
+</p>
+
+<p align="center">
+  <strong>Aprende Linux Fácil</strong>
+</p>
 
 ## Descripción
 
-Linux Academy es una plataforma educativa completa para aprender Linux y tecnologías relacionadas, desde los fundamentos hasta nivel profesional. Diseñada con metodología de academia técnica que prioriza el entendimiento sobre la memorización.
+Pinguiñoño es una plataforma educativa completa para aprender Linux y tecnologías relacionadas, desde los fundamentos hasta nivel profesional. Diseñada con metodología de academia técnica que prioriza el entendimiento sobre la memorización.
 
 ## Características
 
@@ -13,15 +19,17 @@ Linux Academy es una plataforma educativa completa para aprender Linux y tecnolo
 - **Sistema bilingüe** completo (Español/Inglés)
 - **Lecciones multimodales** con texto, diagramas, ejercicios y quizzes
 - **Sistema de exámenes** con bloqueo de niveles
+- **Terminal de práctica** para aprender comandos Linux
+- **Laboratorios prácticos** con guías paso a paso
 - **Persistencia de progreso** local
 - **Gamificación** con XP, niveles y rachas de estudio
 
 ## Tecnologías
 
 - **Frontend**: Next.js 16 + TypeScript
-- **Estilos**: Tailwind CSS
+- **Estilos**: Tailwind CSS v4
 - **Estado**: Zustand (con persistencia)
-- **Base de datos**: Prisma + SQLite
+- **Base de datos**: Prisma 7 + SQLite
 - **UI**: Componentes personalizados con diseño moderno
 
 ## Instalación
@@ -48,6 +56,7 @@ src/
 │   ├── dashboard/       # Dashboard
 │   ├── learning/        # Lecciones
 │   ├── exam/            # Exámenes
+│   ├── terminal/        # Terminal simulada
 │   └── roadmap/         # Roadmap visual
 ├── content/             # Contenido educativo
 │   └── modules/         # Módulos por nivel

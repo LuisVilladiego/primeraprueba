@@ -59,8 +59,8 @@ export default function TerminalPage() {
               </div>
               <p className="text-sm text-zinc-600 dark:text-zinc-400">
                 {locale === "es"
-                  ? "Este es un simulador de terminal que te permite practicar comandos básicos de Linux sin riesgo. El sistema de archivos es virtual y se reinicia al recargar la página."
-                  : "This is a terminal simulator that allows you to practice basic Linux commands without risk. The file system is virtual and resets when you reload the page."}
+                  ? "Este es un simulador de terminal de Pinguiñoño que te permite practicar comandos básicos de Linux sin riesgo. El sistema de archivos es virtual y se reinicia al recargar la página."
+                  : "This is Pinguiñoño's terminal simulator that allows you to practice basic Linux commands without risk. The file system is virtual and resets when you reload the page."}
               </p>
             </div>
 

@@ -55,18 +55,22 @@ export function Sidebar() {
       <div className="flex h-16 items-center justify-between border-b border-zinc-200 px-4 dark:border-zinc-800">
         {!sidebarCollapsed && (
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600">
-              <Terminal className="h-5 w-5 text-white" />
-            </div>
+            <img 
+              src="/images/logo.jpg" 
+              alt="Pinguiñoño" 
+              className="h-10 w-10 rounded-lg object-cover"
+            />
             <span className="font-bold text-zinc-900 dark:text-white">
-              Linux Academy
+              Pinguiñoño
             </span>
           </Link>
         )}
         {sidebarCollapsed && (
-          <div className="mx-auto flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600">
-            <Terminal className="h-5 w-5 text-white" />
-          </div>
+          <img 
+            src="/images/logo.jpg" 
+            alt="Pinguiñoño" 
+            className="mx-auto h-10 w-10 rounded-lg object-cover"
+          />
         )}
       </div>
 

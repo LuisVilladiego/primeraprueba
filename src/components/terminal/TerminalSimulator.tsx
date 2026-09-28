@@ -26,7 +26,7 @@ const initialFileSystem: Record<string, FileSystemNode> = {
             children: {
               "readme.txt": {
                 type: "file",
-                content: "Welcome to Linux Academy!\nThis is a practice file.\n",
+                content: "¡Bienvenido a Pinguiñoño!\nEste es un archivo de práctica.\n\nWelcome to Pinguiñoño!\nThis is a practice file.\n",
               },
               "notes.txt": {
                 type: "file",
@@ -51,11 +51,11 @@ const initialFileSystem: Record<string, FileSystemNode> = {
     children: {
       "hostname": {
         type: "file",
-        content: "linux-academy\n",
+        content: "pinguinono\n",
       },
       "os-release": {
         type: "file",
-        content: 'NAME="Linux Academy OS"\nVERSION="1.0"\n',
+        content: 'NAME="Pinguiñoño OS"\nVERSION="1.0"\nID=pinguinono\n',
       },
     },
   },
@@ -93,8 +93,8 @@ export function TerminalSimulator({
     {
       type: "output",
       content: locale === "es" 
-        ? "¡Bienvenido a Linux Academy Terminal!\nEscribe 'help' para ver los comandos disponibles.\n"
-        : "Welcome to Linux Academy Terminal!\nType 'help' to see available commands.\n",
+        ? "¡Bienvenido a Pinguiñoño Terminal!\nEscribe 'help' para ver los comandos disponibles.\n"
+        : "Welcome to Pinguiñoño Terminal!\nType 'help' to see available commands.\n",
     },
   ]);
   const [currentPath, setCurrentPath] = useState(initialPath);
@@ -380,7 +380,7 @@ export function TerminalSimulator({
 
       case "uname": {
         if (args.includes("-a")) {
-          output = "Linux linux-academy 5.15.0-academy #1 SMP x86_64 GNU/Linux\n";
+          output = "Linux pinguinono 5.15.0-pinguinono #1 SMP x86_64 GNU/Linux\n";
         } else {
           output = "Linux\n";
         }
@@ -494,7 +494,7 @@ export function TerminalSimulator({
           <div className="h-3 w-3 rounded-full bg-green-500" />
         </div>
         <span className="ml-2 text-xs text-zinc-400">
-          {locale === "es" ? "Terminal - Linux Academy" : "Terminal - Linux Academy"}
+          Terminal - Pinguiñoño
         </span>
         {expectedCommands && expectedCommands.length > 0 && (
           <span className="ml-auto text-xs text-zinc-500">

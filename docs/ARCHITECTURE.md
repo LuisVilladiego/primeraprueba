@@ -1,8 +1,8 @@
-# Linux Academy - Arquitectura Técnica
+# Pinguiñoño - Arquitectura Técnica
 
 ## Visión General
 
-Linux Academy es una plataforma educativa de escritorio para aprender Linux, administración de sistemas, DevOps, Cloud y tecnologías relacionadas. Diseñada inicialmente para uso personal pero con arquitectura escalable para convertirse en una plataforma multi-usuario.
+Pinguiñoño ("Aprende Linux Fácil") es una plataforma educativa de escritorio para aprender Linux, administración de sistemas, DevOps, Cloud y tecnologías relacionadas. Diseñada inicialmente para uso personal pero con arquitectura escalable para convertirse en una plataforma multi-usuario.
 
 ## Stack Tecnológico
 
