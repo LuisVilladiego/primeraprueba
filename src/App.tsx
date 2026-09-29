@@ -18,11 +18,17 @@ import { ProjectsPage } from "./pages/ProjectsPage";
 import { ToastContainer } from "./components/ui/Toast";
 import { KeyboardShortcutsModal } from "./components/KeyboardShortcutsModal";
 import { OnboardingModal } from "./components/OnboardingModal";
+import { CommandPalette } from "./components/CommandPalette";
 import { KeyboardShortcutsProvider } from "./hooks/useKeyboardShortcuts";
 import { useToastStore } from "./stores/toastStore";
+import { useCommandPaletteStore } from "./stores/commandPaletteStore";
+import { useNotificationTriggers } from "./hooks/useNotificationTriggers";
 
 function App() {
   const { toasts, removeToast } = useToastStore();
+  const { isOpen: isCommandPaletteOpen, close: closeCommandPalette } = useCommandPaletteStore();
+  
+  useNotificationTriggers();
 
   return (
     <ThemeProvider>
@@ -30,6 +36,7 @@ function App() {
         <ToastContainer toasts={toasts} onClose={removeToast} />
         <KeyboardShortcutsModal />
         <OnboardingModal />
+        <CommandPalette isOpen={isCommandPaletteOpen} onClose={closeCommandPalette} />
         <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Dashboard />} />

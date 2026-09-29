@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Keyboard, X } from "lucide-react";
 
 const shortcuts = [
+  { keys: ["Ctrl", "K"], description: { es: "Búsqueda global", en: "Global search" }, highlight: true },
   { keys: ["Ctrl", "D"], description: { es: "Ir al Dashboard", en: "Go to Dashboard" } },
   { keys: ["Ctrl", "T"], description: { es: "Abrir Terminal", en: "Open Terminal" } },
   { keys: ["Ctrl", "R"], description: { es: "Ver Roadmap", en: "View Roadmap" } },

@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSettingsStore } from "@/stores/settingsStore";
+import { useCommandPaletteStore } from "@/stores/commandPaletteStore";
 
 interface ShortcutConfig {
   key: string;
@@ -14,8 +15,15 @@ interface ShortcutConfig {
 export function useKeyboardShortcuts() {
   const navigate = useNavigate();
   const { toggleSidebar, setTheme, theme } = useSettingsStore();
+  const { toggle: toggleCommandPalette } = useCommandPaletteStore();
 
   const shortcuts: ShortcutConfig[] = [
+    {
+      key: "k",
+      ctrl: true,
+      action: () => toggleCommandPalette(),
+      description: { es: "Abrir búsqueda global", en: "Open global search" },
+    },
     {
       key: "d",
       ctrl: true,

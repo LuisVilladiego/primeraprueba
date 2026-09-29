@@ -8,6 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Progress, ProgressRing } from "@/components/ui/Progress";
 import { Button } from "@/components/ui/Button";
 import { StreakCard } from "@/components/StreakCard";
+import { DailyTip } from "@/components/DailyTip";
 import { 
   BookOpen, 
   FlaskConical, 
@@ -230,8 +231,13 @@ export function Dashboard() {
         </Card>
       </div>
 
+      {/* Daily Tip */}
+      <div className="animate-[fade-in-up_0.4s_ease-out_0.45s_both]">
+        <DailyTip />
+      </div>
+
       {/* Next Objectives */}
-      <Card className="animate-[fade-in-up_0.4s_ease-out_0.4s_both]">
+      <Card className="animate-[fade-in-up_0.4s_ease-out_0.5s_both]">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Target className="h-5 w-5" />
