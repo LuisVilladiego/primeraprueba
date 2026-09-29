@@ -9,13 +9,15 @@ import { LabsPage } from "./pages/LabsPage";
 import { LabPage } from "./pages/LabPage";
 import { ExamPage } from "./pages/ExamPage";
 import { TerminalPage } from "./pages/TerminalPage";
-import { PlaceholderPage } from "./pages/PlaceholderPage";
 import { AchievementsPage } from "./pages/AchievementsPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { CommandsPage } from "./pages/CommandsPage";
 import { CertificatesPage } from "./pages/CertificatesPage";
 import { SettingsPage } from "./pages/SettingsPage";
+import { ProjectsPage } from "./pages/ProjectsPage";
 import { ToastContainer } from "./components/ui/Toast";
+import { KeyboardShortcutsModal } from "./components/KeyboardShortcutsModal";
+import { KeyboardShortcutsProvider } from "./hooks/useKeyboardShortcuts";
 import { useToastStore } from "./stores/toastStore";
 
 function App() {
@@ -23,8 +25,10 @@ function App() {
 
   return (
     <ThemeProvider>
-      <ToastContainer toasts={toasts} onClose={removeToast} />
-      <Routes>
+      <KeyboardShortcutsProvider>
+        <ToastContainer toasts={toasts} onClose={removeToast} />
+        <KeyboardShortcutsModal />
+        <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/roadmap" element={<Roadmap />} />
@@ -39,10 +43,10 @@ function App() {
           <Route path="/commands" element={<CommandsPage />} />
           <Route path="/certificates" element={<CertificatesPage />} />
           <Route path="/settings" element={<SettingsPage />} />
-          {/* Placeholder pages */}
-          <Route path="/projects" element={<PlaceholderPage title="Proyectos" />} />
+          <Route path="/projects" element={<ProjectsPage />} />
         </Route>
-      </Routes>
+        </Routes>
+      </KeyboardShortcutsProvider>
     </ThemeProvider>
   );
 }

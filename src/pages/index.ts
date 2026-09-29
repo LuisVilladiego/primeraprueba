@@ -12,3 +12,4 @@ export { ProfilePage } from "./ProfilePage";
 export { CommandsPage } from "./CommandsPage";
 export { CertificatesPage } from "./CertificatesPage";
 export { SettingsPage } from "./SettingsPage";
+export { ProjectsPage } from "./ProjectsPage";
