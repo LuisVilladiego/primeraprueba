@@ -10,11 +10,11 @@ import {
   GraduationCap,
   FolderKanban,
   User,
-  Search,
   BookText,
   Terminal,
   Trophy,
   Award,
+  Settings,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -33,6 +33,7 @@ const navItems = [
   { key: "achievements", href: "/achievements", icon: Trophy },
   { key: "certificates", href: "/certificates", icon: Award },
   { key: "profile", href: "/profile", icon: User },
+  { key: "settings", href: "/settings", icon: Settings },
 ] as const;
 
 export function Sidebar() {

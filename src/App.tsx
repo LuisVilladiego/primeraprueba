@@ -14,6 +14,7 @@ import { AchievementsPage } from "./pages/AchievementsPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { CommandsPage } from "./pages/CommandsPage";
 import { CertificatesPage } from "./pages/CertificatesPage";
+import { SettingsPage } from "./pages/SettingsPage";
 import { ToastContainer } from "./components/ui/Toast";
 import { useToastStore } from "./stores/toastStore";
 
@@ -37,6 +38,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/commands" element={<CommandsPage />} />
           <Route path="/certificates" element={<CertificatesPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
           {/* Placeholder pages */}
           <Route path="/projects" element={<PlaceholderPage title="Proyectos" />} />
         </Route>
