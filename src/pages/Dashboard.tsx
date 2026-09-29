@@ -3,23 +3,28 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { useUserStore } from "@/stores/userStore";
 import { useProgressStore } from "@/stores/progressStore";
 import { useAchievementTracker } from "@/hooks/useAchievementTracker";
+import { useStreakTracker } from "@/hooks/useStreakTracker";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Progress, ProgressRing } from "@/components/ui/Progress";
 import { Button } from "@/components/ui/Button";
+import { StreakCard } from "@/components/StreakCard";
 import { 
   BookOpen, 
   FlaskConical, 
   GraduationCap, 
   Target, 
   ChevronRight,
-  Sparkles
+  Sparkles,
+  Star,
+  Clock
 } from "lucide-react";
 
 export function Dashboard() {
   const { t, locale } = useTranslation();
-  const { stats } = useUserStore();
+  const { stats, commandsExecuted, todayStudyTime } = useUserStore();
   const { getModuleProgress } = useProgressStore();
   useAchievementTracker();
+  useStreakTracker();
 
   const level0Progress = getModuleProgress("level-0");
 
@@ -70,9 +75,98 @@ export function Dashboard() {
         </p>
       </div>
 
+      {/* Main Stats Row */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {/* XP & Level */}
+        <Card hover className="animate-[fade-in-up_0.4s_ease-out_0.1s_both]">
+          <div className="p-5">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-medium text-zinc-500">
+                {locale === "es" ? "Nivel" : "Level"} {stats.level}
+              </span>
+              <Star className="h-5 w-5 text-yellow-500" />
+            </div>
+            <p className="text-3xl font-bold text-zinc-900 dark:text-white">
+              {stats.totalXp.toLocaleString()}
+            </p>
+            <p className="text-sm text-zinc-500">XP Total</p>
+            <div className="mt-3">
+              <Progress 
+                value={stats.totalXp % 1000} 
+                max={1000} 
+                size="sm" 
+                variant="gradient"
+              />
+              <p className="mt-1 text-xs text-zinc-400">
+                {1000 - (stats.totalXp % 1000)} XP {locale === "es" ? "para nivel" : "to level"} {stats.level + 1}
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        {/* Study Time */}
+        <Card hover className="animate-[fade-in-up_0.4s_ease-out_0.15s_both]">
+          <div className="p-5">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-medium text-zinc-500">
+                {locale === "es" ? "Tiempo de estudio" : "Study time"}
+              </span>
+              <Clock className="h-5 w-5 text-blue-500" />
+            </div>
+            <p className="text-3xl font-bold text-zinc-900 dark:text-white">
+              {Math.floor(stats.totalStudyTime / 60)}h {stats.totalStudyTime % 60}m
+            </p>
+            <p className="text-sm text-zinc-500">
+              {locale === "es" ? "total acumulado" : "total accumulated"}
+            </p>
+            {todayStudyTime > 0 && (
+              <p className="mt-2 text-xs text-green-600 dark:text-green-400">
+                +{todayStudyTime}m {locale === "es" ? "hoy" : "today"}
+              </p>
+            )}
+          </div>
+        </Card>
+
+        {/* Labs */}
+        <Card hover className="animate-[fade-in-up_0.4s_ease-out_0.2s_both]">
+          <div className="p-5">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-medium text-zinc-500">
+                {locale === "es" ? "Laboratorios" : "Labs"}
+              </span>
+              <FlaskConical className="h-5 w-5 text-purple-500" />
+            </div>
+            <p className="text-3xl font-bold text-zinc-900 dark:text-white">
+              {stats.labsCompleted}
+            </p>
+            <p className="text-sm text-zinc-500">
+              {locale === "es" ? "completados" : "completed"}
+            </p>
+          </div>
+        </Card>
+
+        {/* Commands */}
+        <Card hover className="animate-[fade-in-up_0.4s_ease-out_0.25s_both]">
+          <div className="p-5">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-medium text-zinc-500">
+                {locale === "es" ? "Comandos" : "Commands"}
+              </span>
+              <span className="text-lg">💻</span>
+            </div>
+            <p className="text-3xl font-bold text-zinc-900 dark:text-white">
+              {commandsExecuted}
+            </p>
+            <p className="text-sm text-zinc-500">
+              {locale === "es" ? "ejecutados" : "executed"}
+            </p>
+          </div>
+        </Card>
+      </div>
+
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Progress Overview */}
-        <Card hover className="col-span-full lg:col-span-1 animate-[fade-in-up_0.4s_ease-out_0.1s_both]">
+        <Card hover className="animate-[fade-in-up_0.4s_ease-out_0.3s_both]">
           <CardHeader>
             <CardTitle>{t("dashboard.overallProgress")}</CardTitle>
           </CardHeader>
@@ -93,55 +187,46 @@ export function Dashboard() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-zinc-900 dark:text-white">
-                  {stats.exercisesCompleted}
-                </p>
-                <p className="text-sm text-zinc-500">{t("dashboard.exercisesCompleted")}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Stats Cards */}
-        <Card hover className="animate-[fade-in-up_0.4s_ease-out_0.2s_both]">
-          <CardHeader>
-            <CardTitle>{t("dashboard.labsCompleted")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-900/30">
-                <FlaskConical className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-              </div>
-              <div>
-                <p className="text-3xl font-bold text-zinc-900 dark:text-white">
-                  {stats.labsCompleted}
-                </p>
-                <p className="text-sm text-zinc-500">
-                  {locale === "es" ? "laboratorios" : "labs"}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card hover className="animate-[fade-in-up_0.4s_ease-out_0.3s_both]">
-          <CardHeader>
-            <CardTitle>{t("dashboard.examsPassed")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 dark:bg-green-900/30">
-                <GraduationCap className="h-6 w-6 text-green-600 dark:text-green-400" />
-              </div>
-              <div>
-                <p className="text-3xl font-bold text-zinc-900 dark:text-white">
                   {stats.examsPassed}
                 </p>
-                <p className="text-sm text-zinc-500">
-                  {locale === "es" ? "exámenes" : "exams"}
-                </p>
+                <p className="text-sm text-zinc-500">{t("dashboard.examsPassed")}</p>
               </div>
             </div>
           </CardContent>
+        </Card>
+
+        {/* Streak Card */}
+        <div className="animate-[fade-in-up_0.4s_ease-out_0.35s_both]">
+          <StreakCard />
+        </div>
+
+        {/* Quick Links */}
+        <Card hover className="animate-[fade-in-up_0.4s_ease-out_0.4s_both]">
+          <div className="p-5">
+            <h3 className="font-semibold text-zinc-900 dark:text-white mb-4">
+              {locale === "es" ? "Acceso Rápido" : "Quick Access"}
+            </h3>
+            <div className="space-y-2">
+              {[
+                { href: "/terminal", icon: "💻", label: locale === "es" ? "Terminal" : "Terminal" },
+                { href: "/commands", icon: "📖", label: locale === "es" ? "Comandos" : "Commands" },
+                { href: "/achievements", icon: "🏆", label: locale === "es" ? "Logros" : "Achievements" },
+                { href: "/projects", icon: "📁", label: locale === "es" ? "Proyectos" : "Projects" },
+              ].map((link) => (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                >
+                  <span className="text-xl">{link.icon}</span>
+                  <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    {link.label}
+                  </span>
+                  <ChevronRight className="ml-auto h-4 w-4 text-zinc-400" />
+                </Link>
+              ))}
+            </div>
+          </div>
         </Card>
       </div>
 
