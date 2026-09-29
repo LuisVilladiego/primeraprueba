@@ -6,6 +6,7 @@ interface UserState {
   userId: string | null;
   name: string;
   stats: UserStats;
+  commandsExecuted: number;
   setUserId: (id: string) => void;
   setName: (name: string) => void;
   updateStats: (stats: Partial<UserStats>) => void;
@@ -13,6 +14,7 @@ interface UserState {
   incrementStreak: () => void;
   resetStreak: () => void;
   addStudyTime: (minutes: number) => void;
+  incrementCommandsExecuted: () => void;
 }
 
 const initialStats: UserStats = {
@@ -35,6 +37,7 @@ export const useUserStore = create<UserState>()(
       userId: null,
       name: "Estudiante",
       stats: initialStats,
+      commandsExecuted: 0,
       setUserId: (id) => set({ userId: id }),
       setName: (name) => set({ name }),
       updateStats: (newStats) =>
@@ -73,6 +76,10 @@ export const useUserStore = create<UserState>()(
             ...state.stats,
             totalStudyTime: state.stats.totalStudyTime + minutes,
           },
+        })),
+      incrementCommandsExecuted: () =>
+        set((state) => ({
+          commandsExecuted: state.commandsExecuted + 1,
         })),
     }),
     {

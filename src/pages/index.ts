@@ -10,3 +10,4 @@ export { PlaceholderPage } from "./PlaceholderPage";
 export { AchievementsPage } from "./AchievementsPage";
 export { ProfilePage } from "./ProfilePage";
 export { CommandsPage } from "./CommandsPage";
+export { CertificatesPage } from "./CertificatesPage";

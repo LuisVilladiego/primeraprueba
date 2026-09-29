@@ -1,8 +1,11 @@
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useUserStore } from "@/stores/userStore";
+import { useAchievementsStore } from "@/stores/achievementsStore";
 import { Card } from "@/components/ui/Card";
-import { Terminal as TerminalIcon, Info, Lightbulb, Zap } from "lucide-react";
+import { Badge } from "@/components/ui/Badge";
+import { Terminal as TerminalIcon, Info, Lightbulb, Zap, Hash } from "lucide-react";
 
 interface TerminalOutput {
   type: "input" | "output" | "error";
@@ -11,6 +14,9 @@ interface TerminalOutput {
 
 export function TerminalPage() {
   const { locale } = useTranslation();
+  const { commandsExecuted, incrementCommandsExecuted } = useUserStore();
+  const { checkAchievement } = useAchievementsStore();
+  
   const [history, setHistory] = useState<TerminalOutput[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
@@ -139,6 +145,13 @@ export function TerminalPage() {
       if (result) {
         setHistory((prev) => [...prev, { type: "output", content: result }]);
       }
+      
+      // Increment command counter and check achievements
+      incrementCommandsExecuted();
+      const newCount = commandsExecuted + 1;
+      checkAchievement("terminal-newbie", newCount);
+      checkAchievement("command-warrior", newCount);
+      checkAchievement("terminal-master", newCount);
       
       // Update path after cd or any command that might change directory
       if (trimmedCommand.startsWith("cd ") || trimmedCommand === "cd") {
@@ -323,6 +336,29 @@ export function TerminalPage() {
                 </li>
               ))}
             </ul>
+          </Card>
+
+          {/* Command Counter */}
+          <Card className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 dark:bg-green-900/30">
+                <Hash className="h-6 w-6 text-green-600 dark:text-green-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-zinc-900 dark:text-white">
+                  {commandsExecuted}
+                </p>
+                <p className="text-sm text-zinc-500">
+                  {locale === "es" ? "Comandos ejecutados" : "Commands executed"}
+                </p>
+              </div>
+            </div>
+            <div className="mt-3 text-xs text-zinc-500">
+              {commandsExecuted < 1 && (locale === "es" ? "🎯 Ejecuta tu primer comando" : "🎯 Run your first command")}
+              {commandsExecuted >= 1 && commandsExecuted < 100 && (locale === "es" ? `🔥 ${100 - commandsExecuted} para el próximo logro` : `🔥 ${100 - commandsExecuted} to next achievement`)}
+              {commandsExecuted >= 100 && commandsExecuted < 500 && (locale === "es" ? `⚡ ${500 - commandsExecuted} para Maestro de Terminal` : `⚡ ${500 - commandsExecuted} to Terminal Master`)}
+              {commandsExecuted >= 500 && (locale === "es" ? "🏆 ¡Eres un Maestro de Terminal!" : "🏆 You're a Terminal Master!")}
+            </div>
           </Card>
 
           <Card className="p-4">

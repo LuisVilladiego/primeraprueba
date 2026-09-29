@@ -13,6 +13,7 @@ import { PlaceholderPage } from "./pages/PlaceholderPage";
 import { AchievementsPage } from "./pages/AchievementsPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { CommandsPage } from "./pages/CommandsPage";
+import { CertificatesPage } from "./pages/CertificatesPage";
 import { ToastContainer } from "./components/ui/Toast";
 import { useToastStore } from "./stores/toastStore";
 
@@ -35,11 +36,9 @@ function App() {
           <Route path="/achievements" element={<AchievementsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/commands" element={<CommandsPage />} />
+          <Route path="/certificates" element={<CertificatesPage />} />
           {/* Placeholder pages */}
           <Route path="/projects" element={<PlaceholderPage title="Proyectos" />} />
-          <Route path="/search" element={<PlaceholderPage title="Buscar" />} />
-          <Route path="/dictionary" element={<PlaceholderPage title="Diccionario" />} />
-          <Route path="/certificates" element={<PlaceholderPage title="Certificados" />} />
         </Route>
       </Routes>
     </ThemeProvider>
