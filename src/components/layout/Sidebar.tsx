@@ -15,6 +15,8 @@ import {
   Trophy,
   Award,
   Settings,
+  History,
+  BarChart3,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -29,9 +31,11 @@ const navItems = [
   { divider: true },
   { key: "commands", href: "/commands", icon: BookText },
   { key: "terminal", href: "/terminal", icon: Terminal },
+  { key: "history", href: "/history", icon: History },
   { divider: true },
   { key: "achievements", href: "/achievements", icon: Trophy },
   { key: "certificates", href: "/certificates", icon: Award },
+  { key: "stats", href: "/stats", icon: BarChart3 },
   { key: "profile", href: "/profile", icon: User },
   { key: "settings", href: "/settings", icon: Settings },
 ] as const;

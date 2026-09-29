@@ -16,6 +16,8 @@
     "dictionary": "Dictionary",
     "commands": "Commands",
     "terminal": "Terminal",
+    "history": "History",
+    "stats": "Statistics",
     "achievements": "Achievements",
     "certificates": "Certificates"
   },

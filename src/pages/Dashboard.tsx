@@ -9,6 +9,7 @@ import { Progress, ProgressRing } from "@/components/ui/Progress";
 import { Button } from "@/components/ui/Button";
 import { StreakCard } from "@/components/StreakCard";
 import { DailyTip } from "@/components/DailyTip";
+import { DailyChallenges } from "@/components/DailyChallenges";
 import { 
   BookOpen, 
   FlaskConical, 
@@ -231,9 +232,14 @@ export function Dashboard() {
         </Card>
       </div>
 
-      {/* Daily Tip */}
-      <div className="animate-[fade-in-up_0.4s_ease-out_0.45s_both]">
-        <DailyTip />
+      {/* Daily Tip & Challenges */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="animate-[fade-in-up_0.4s_ease-out_0.45s_both]">
+          <DailyTip />
+        </div>
+        <div className="animate-[fade-in-up_0.4s_ease-out_0.5s_both]">
+          <DailyChallenges />
+        </div>
       </div>
 
       {/* Next Objectives */}

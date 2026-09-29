@@ -15,6 +15,8 @@ import { CommandsPage } from "./pages/CommandsPage";
 import { CertificatesPage } from "./pages/CertificatesPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { ProjectsPage } from "./pages/ProjectsPage";
+import { HistoryPage } from "./pages/HistoryPage";
+import { StatsPage } from "./pages/StatsPage";
 import { ToastContainer } from "./components/ui/Toast";
 import { KeyboardShortcutsModal } from "./components/KeyboardShortcutsModal";
 import { OnboardingModal } from "./components/OnboardingModal";
@@ -53,6 +55,8 @@ function App() {
           <Route path="/certificates" element={<CertificatesPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/history" element={<HistoryPage />} />
+          <Route path="/stats" element={<StatsPage />} />
         </Route>
         </Routes>
       </KeyboardShortcutsProvider>

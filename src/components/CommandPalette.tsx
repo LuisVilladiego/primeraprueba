@@ -14,6 +14,8 @@ import {
   Command,
   ArrowRight,
   Home,
+  History,
+  BarChart3,
   Keyboard,
   X,
 } from "lucide-react";
@@ -83,6 +85,24 @@ const pages: SearchItem[] = [
     icon: <FolderKanban className="h-5 w-5" />,
     path: "/projects",
     keywords: ["practicar", "hands-on", "practice"],
+  },
+  {
+    id: "history",
+    type: "page",
+    title: { es: "Historial de Comandos", en: "Command History" },
+    description: { es: "Ver comandos ejecutados", en: "View executed commands" },
+    icon: <History className="h-5 w-5" />,
+    path: "/history",
+    keywords: ["historial", "comandos", "log", "ejecutados"],
+  },
+  {
+    id: "stats",
+    type: "page",
+    title: { es: "Estadísticas", en: "Statistics" },
+    description: { es: "Ver estadísticas detalladas", en: "View detailed statistics" },
+    icon: <BarChart3 className="h-5 w-5" />,
+    path: "/stats",
+    keywords: ["stats", "analytics", "datos", "progreso", "metricas"],
   },
   {
     id: "achievements",
