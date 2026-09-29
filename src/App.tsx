@@ -17,6 +17,7 @@ import { SettingsPage } from "./pages/SettingsPage";
 import { ProjectsPage } from "./pages/ProjectsPage";
 import { ToastContainer } from "./components/ui/Toast";
 import { KeyboardShortcutsModal } from "./components/KeyboardShortcutsModal";
+import { OnboardingModal } from "./components/OnboardingModal";
 import { KeyboardShortcutsProvider } from "./hooks/useKeyboardShortcuts";
 import { useToastStore } from "./stores/toastStore";
 
@@ -28,6 +29,7 @@ function App() {
       <KeyboardShortcutsProvider>
         <ToastContainer toasts={toasts} onClose={removeToast} />
         <KeyboardShortcutsModal />
+        <OnboardingModal />
         <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Dashboard />} />
