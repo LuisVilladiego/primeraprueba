@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useUserStore } from "@/stores/userStore";
 import { useProgressStore } from "@/stores/progressStore";
+import { useAchievementTracker } from "@/hooks/useAchievementTracker";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Progress, ProgressRing } from "@/components/ui/Progress";
 import { Button } from "@/components/ui/Button";
@@ -18,6 +19,7 @@ export function Dashboard() {
   const { t, locale } = useTranslation();
   const { stats } = useUserStore();
   const { getModuleProgress } = useProgressStore();
+  useAchievementTracker();
 
   const level0Progress = getModuleProgress("level-0");
 

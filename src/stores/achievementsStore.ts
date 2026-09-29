@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { useToastStore } from "./toastStore";
 
 export interface Achievement {
   id: string;
@@ -13,9 +14,10 @@ export interface Achievement {
 
 interface AchievementsState {
   unlockedAchievements: string[];
-  checkAchievement: (id: string) => boolean;
-  unlockAchievement: (id: string) => void;
+  checkAchievement: (id: string, currentValue: number) => boolean;
+  unlockAchievement: (id: string, showNotification?: boolean) => void;
   getUnlockedCount: () => number;
+  isUnlocked: (id: string) => boolean;
 }
 
 export const achievements: Achievement[] = [
@@ -165,16 +167,45 @@ export const useAchievementsStore = create<AchievementsState>()(
     (set, get) => ({
       unlockedAchievements: [],
       
-      checkAchievement: (id) => {
+      isUnlocked: (id) => {
         return get().unlockedAchievements.includes(id);
       },
       
-      unlockAchievement: (id) => {
+      checkAchievement: (id, currentValue) => {
+        const state = get();
+        if (state.unlockedAchievements.includes(id)) {
+          return true;
+        }
+        
+        const achievement = achievements.find((a) => a.id === id);
+        if (!achievement) return false;
+        
+        if (currentValue >= achievement.requirement) {
+          state.unlockAchievement(id, true);
+          return true;
+        }
+        
+        return false;
+      },
+      
+      unlockAchievement: (id, showNotification = false) => {
         const state = get();
         if (!state.unlockedAchievements.includes(id)) {
+          const achievement = achievements.find((a) => a.id === id);
           set({
             unlockedAchievements: [...state.unlockedAchievements, id],
           });
+          
+          if (showNotification && achievement) {
+            const locale = localStorage.getItem("pinguinono-settings") 
+              ? JSON.parse(localStorage.getItem("pinguinono-settings")!).state?.locale || "es"
+              : "es";
+            const title = achievement.title[locale as "es" | "en"];
+            useToastStore.getState().showAchievement(
+              `${achievement.icon} ${title}`,
+              achievement.xpReward
+            );
+          }
         }
       },
       

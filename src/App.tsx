@@ -13,10 +13,15 @@ import { PlaceholderPage } from "./pages/PlaceholderPage";
 import { AchievementsPage } from "./pages/AchievementsPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { CommandsPage } from "./pages/CommandsPage";
+import { ToastContainer } from "./components/ui/Toast";
+import { useToastStore } from "./stores/toastStore";
 
 function App() {
+  const { toasts, removeToast } = useToastStore();
+
   return (
     <ThemeProvider>
+      <ToastContainer toasts={toasts} onClose={removeToast} />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Dashboard />} />
