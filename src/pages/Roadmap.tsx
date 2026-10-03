@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useProgressStore } from "@/stores/progressStore";
+import { getCourse } from "@/content/courses/registry";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Progress, ProgressRing } from "@/components/ui/Progress";
@@ -45,14 +46,14 @@ const levels: Level[] = [
   },
   { 
     id: 1, 
-    icon: "🐧", 
-    title: { es: "Linux Fundamentals", en: "Linux Fundamentals" },
-    description: { es: "Domina los fundamentos del sistema operativo Linux", en: "Master the fundamentals of the Linux operating system" },
-    href: null,
-    lessons: 10,
-    labs: 8,
-    duration: 180,
-    skills: ["Permisos", "Usuarios", "Procesos"]
+    icon: "💻", 
+    title: { es: "La Terminal y Comandos Básicos", en: "Terminal and Basic Commands" },
+    description: { es: "Domina la terminal de Linux: navegación, archivos y comandos esenciales", en: "Master the Linux terminal: navigation, files and essential commands" },
+    href: "/courses/level-1",
+    lessons: 7,
+    labs: 2,
+    duration: 130,
+    skills: ["Terminal", "pwd/cd/ls", "Archivos", "man"]
   },
   { 
     id: 2, 
@@ -217,12 +218,17 @@ export function Roadmap() {
   const [expandedLevel, setExpandedLevel] = useState<number | null>(null);
 
   const getLevelStatus = (levelId: number) => {
-    if (levelId === 0) {
-      const progress = getModuleProgress("level-0");
-      if (isExamPassed("exam-level-0")) return "completed";
+    const moduleId = `level-${levelId}`;
+    const hasCourse = !!getCourse(moduleId);
+
+    if (hasCourse) {
+      const progress = getModuleProgress(moduleId);
+      if (isExamPassed(`exam-${moduleId}`)) return "completed";
       if (progress > 0) return "in_progress";
-      return "available";
+      if (levelId === 0) return "available";
+      return isExamPassed(`exam-level-${levelId - 1}`) ? "available" : "locked";
     }
+
     const prevExamPassed = isExamPassed(`exam-level-${levelId - 1}`);
     return prevExamPassed ? "available" : "locked";
   };
@@ -341,7 +347,7 @@ export function Roadmap() {
         <div className="space-y-4">
           {filteredLevels.map((level, index) => {
             const status = getLevelStatus(level.id);
-            const progress = level.id === 0 ? getModuleProgress("level-0") : 0;
+            const progress = getModuleProgress(`level-${level.id}`);
             const isLocked = status === "locked";
             const isCompleted = status === "completed";
             const isInProgress = status === "in_progress";

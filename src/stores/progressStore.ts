@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { ProgressStatus, EntityType } from "@/types";
+import { getLessonIdsForModule } from "@/content/courses/registry";
 
 interface ProgressEntry {
   entityType: EntityType;
@@ -184,9 +185,7 @@ export const useProgressStore = create<ProgressState>()(
 
       getModuleProgress: (moduleId) => {
         const state = get();
-        const lessonIds = moduleId === "level-0" 
-          ? ["lesson-0-1", "lesson-0-2", "lesson-0-3", "lesson-0-4", "lesson-0-5", "lesson-0-6", "lesson-0-7"]
-          : [];
+        const lessonIds = getLessonIdsForModule(moduleId);
         
         let completed = 0;
         for (const id of lessonIds) {

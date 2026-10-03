@@ -152,10 +152,10 @@ const linuxCommands: SearchItem[] = [
 ];
 
 const levels: SearchItem[] = [
-  { id: "level-0", type: "level", title: { es: "Nivel 0: Fundamentos Linux", en: "Level 0: Linux Fundamentals" }, icon: <BookOpen className="h-5 w-5" />, path: "/lessons/0", keywords: ["basico", "inicio", "basic"] },
-  { id: "level-1", type: "level", title: { es: "Nivel 1: Sistema de Archivos", en: "Level 1: File System" }, icon: <BookOpen className="h-5 w-5" />, path: "/lessons/1", keywords: ["files", "archivos", "directories"] },
-  { id: "level-2", type: "level", title: { es: "Nivel 2: Permisos", en: "Level 2: Permissions" }, icon: <BookOpen className="h-5 w-5" />, path: "/lessons/2", keywords: ["chmod", "chown", "access"] },
-  { id: "level-3", type: "level", title: { es: "Nivel 3: Procesos", en: "Level 3: Processes" }, icon: <BookOpen className="h-5 w-5" />, path: "/lessons/3", keywords: ["ps", "top", "kill"] },
+  { id: "level-0", type: "level", title: { es: "Nivel 0: Fundamentos de Computación", en: "Level 0: Computing Fundamentals" }, icon: <BookOpen className="h-5 w-5" />, path: "/courses/level-0", keywords: ["basico", "inicio", "basic"] },
+  { id: "level-1", type: "level", title: { es: "Nivel 1: Terminal y Comandos", en: "Level 1: Terminal and Commands" }, icon: <BookOpen className="h-5 w-5" />, path: "/courses/level-1", keywords: ["terminal", "archivos", "commands"] },
+  { id: "level-2", type: "level", title: { es: "Nivel 2: Administración Linux", en: "Level 2: Linux Administration" }, icon: <BookOpen className="h-5 w-5" />, path: "/roadmap", keywords: ["systemd", "apt", "admin"] },
+  { id: "level-3", type: "level", title: { es: "Nivel 3: Networking", en: "Level 3: Networking" }, icon: <BookOpen className="h-5 w-5" />, path: "/roadmap", keywords: ["network", "dns", "firewall"] },
 ];
 
 interface CommandPaletteProps {

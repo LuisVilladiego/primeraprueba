@@ -1,21 +1,20 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, Navigate } from "react-router-dom";
 import { useTranslation } from "@/hooks/useTranslation";
-import { level0Labs } from "@/content/modules/level-0";
+import { getCourse } from "@/content/courses/registry";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { 
-  ArrowLeft, 
-  FlaskConical, 
-  Clock, 
-  Target,
-  Lightbulb
-} from "lucide-react";
+import { ArrowLeft, FlaskConical, Clock, Target, Lightbulb } from "lucide-react";
 
 export function LabPage() {
-  const { slug } = useParams();
+  const { levelId = "level-0", slug } = useParams();
   const { tBilingual, locale } = useTranslation();
 
-  const lab = level0Labs.find((l) => l.slug === slug);
+  const course = getCourse(levelId);
+  if (!course) {
+    return <Navigate to="/roadmap" replace />;
+  }
+
+  const lab = course.labs.find((l) => l.slug === slug);
 
   if (!lab) {
     return (
@@ -33,22 +32,24 @@ export function LabPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      {/* Breadcrumb */}
       <div className="mb-6 flex items-center gap-2 text-sm text-zinc-500">
-        <Link to="/courses/level-0" className="hover:text-zinc-900 dark:hover:text-white">
-          Nivel 0
+        <Link
+          to={`/courses/${levelId}`}
+          className="hover:text-zinc-900 dark:hover:text-white"
+        >
+          {locale === "es" ? `Nivel ${course.module.level}` : `Level ${course.module.level}`}
         </Link>
         <span>/</span>
-        <Link to="/courses/level-0/labs" className="hover:text-zinc-900 dark:hover:text-white">
+        <Link
+          to={`/courses/${levelId}/labs`}
+          className="hover:text-zinc-900 dark:hover:text-white"
+        >
           Labs
         </Link>
         <span>/</span>
-        <span className="text-zinc-900 dark:text-white">
-          {tBilingual(lab.title)}
-        </span>
+        <span className="text-zinc-900 dark:text-white">{tBilingual(lab.title)}</span>
       </div>
 
-      {/* Header */}
       <Card className="mb-6 p-6">
         <div className="flex items-start justify-between">
           <div>
@@ -71,7 +72,6 @@ export function LabPage() {
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Objectives */}
         <Card className="p-4">
           <div className="mb-3 flex items-center gap-2">
             <Target className="h-5 w-5 text-purple-500" />
@@ -81,7 +81,10 @@ export function LabPage() {
           </div>
           <ul className="space-y-2">
             {objectives.map((obj, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+              <li
+                key={i}
+                className="flex items-start gap-2 text-sm text-zinc-600 dark:text-zinc-400"
+              >
                 <span className="mt-1 text-purple-500">•</span>
                 {obj}
               </li>
@@ -89,7 +92,6 @@ export function LabPage() {
           </ul>
         </Card>
 
-        {/* Hints */}
         <Card className="p-4">
           <div className="mb-3 flex items-center gap-2">
             <Lightbulb className="h-5 w-5 text-yellow-500" />
@@ -99,7 +101,10 @@ export function LabPage() {
           </div>
           <ul className="space-y-2">
             {hints.map((hint, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+              <li
+                key={i}
+                className="flex items-start gap-2 text-sm text-zinc-600 dark:text-zinc-400"
+              >
                 <span className="text-yellow-500">💡</span>
                 {hint}
               </li>
@@ -108,7 +113,6 @@ export function LabPage() {
         </Card>
       </div>
 
-      {/* Instructions */}
       <Card className="mt-6 p-4">
         <h3 className="mb-4 font-semibold text-zinc-900 dark:text-white">
           {locale === "es" ? "Instrucciones" : "Instructions"}
@@ -133,16 +137,15 @@ export function LabPage() {
         </ol>
       </Card>
 
-      {/* Link to Terminal */}
       <Card className="mt-6 p-4">
         <div className="text-center">
           <p className="mb-4 text-zinc-600 dark:text-zinc-400">
-            {locale === "es" 
-              ? "Abre la terminal para completar este laboratorio" 
+            {locale === "es"
+              ? "Abre la terminal para completar este laboratorio"
               : "Open the terminal to complete this lab"}
           </p>
-          <Link 
-            to="/terminal" 
+          <Link
+            to="/terminal"
             className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-6 py-3 font-medium text-white transition-colors hover:bg-green-700"
           >
             {locale === "es" ? "Abrir Terminal" : "Open Terminal"}

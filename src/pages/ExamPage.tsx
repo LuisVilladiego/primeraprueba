@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate, useParams } from "react-router-dom";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useProgressStore } from "@/stores/progressStore";
 import { useUserStore } from "@/stores/userStore";
-import { level0Exam } from "@/content/modules/level-0";
+import { getCourse } from "@/content/courses/registry";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -23,18 +23,26 @@ import {
 type ExamState = "start" | "in_progress" | "results";
 
 export function ExamPage() {
+  const { levelId = "level-0" } = useParams();
   const navigate = useNavigate();
   const { t, tBilingual, locale } = useTranslation();
   const { markAsCompleted, getProgress, setExamPassed } = useProgressStore();
   const { incrementXp, updateStats, stats } = useUserStore();
+
+  const course = getCourse(levelId);
+  const exam = course?.exam;
 
   const [examState, setExamState] = useState<ExamState>("start");
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [showResults, setShowResults] = useState(false);
 
-  const questions = level0Exam.questions;
-  const progress = getProgress("EXAM", level0Exam.id);
+  if (!course || !exam) {
+    return <Navigate to="/roadmap" replace />;
+  }
+
+  const questions = exam.questions;
+  const progress = getProgress("EXAM", exam.id);
   const alreadyPassed = progress?.status === "COMPLETED";
 
   const handleStartExam = () => {
@@ -81,11 +89,11 @@ export function ExamPage() {
   };
 
   const { correct, total, percentage } = showResults ? calculateScore() : { correct: 0, total: 0, percentage: 0 };
-  const passed = percentage >= level0Exam.passingScore;
+  const passed = percentage >= exam.passingScore;
 
   if (showResults && passed && !alreadyPassed) {
-    markAsCompleted("EXAM", level0Exam.id, percentage);
-    setExamPassed(level0Exam.id);
+    markAsCompleted("EXAM", exam.id, percentage);
+    setExamPassed(exam.id);
     incrementXp(200);
     updateStats({ examsPassed: stats.examsPassed + 1 });
   }
@@ -96,8 +104,8 @@ export function ExamPage() {
     <div className="mx-auto max-w-4xl">
       {/* Breadcrumb */}
       <div className="mb-6 flex items-center gap-2 text-sm text-zinc-500">
-        <Link to="/courses/level-0" className="hover:text-zinc-900 dark:hover:text-white">
-          {t("roadmap.level")} 0
+        <Link to={`/courses/${levelId}`} className="hover:text-zinc-900 dark:hover:text-white">
+          {t("roadmap.level")} {course.module.level}
         </Link>
         <span>/</span>
         <span className="text-zinc-900 dark:text-white">
@@ -111,10 +119,10 @@ export function ExamPage() {
             <GraduationCap className="h-10 w-10 text-green-600 dark:text-green-400" />
           </div>
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-            {tBilingual(level0Exam.title)}
+            {tBilingual(exam.title)}
           </h1>
           <p className="mx-auto mt-2 max-w-md text-zinc-600 dark:text-zinc-400">
-            {tBilingual(level0Exam.description)}
+            {tBilingual(exam.description)}
           </p>
 
           <div className="mx-auto mt-6 flex max-w-sm justify-center gap-6">
@@ -128,7 +136,7 @@ export function ExamPage() {
             </div>
             <div className="text-center">
               <p className="text-2xl font-bold text-zinc-900 dark:text-white">
-                {level0Exam.passingScore}%
+                {exam.passingScore}%
               </p>
               <p className="text-sm text-zinc-500">
                 {locale === "es" ? "Para aprobar" : "To pass"}
@@ -288,8 +296,8 @@ export function ExamPage() {
                   ? "Has desbloqueado el siguiente nivel. ¡Sigue aprendiendo!"
                   : "You've unlocked the next level. Keep learning!")
               : (locale === "es"
-                  ? `Necesitas ${level0Exam.passingScore}% para aprobar. Revisa el material e intenta de nuevo.`
-                  : `You need ${level0Exam.passingScore}% to pass. Review the material and try again.`)}
+                  ? `Necesitas ${exam.passingScore}% para aprobar. Revisa el material e intenta de nuevo.`
+                  : `You need ${exam.passingScore}% to pass. Review the material and try again.`)}
           </p>
 
           <div className="mt-8 flex justify-center gap-4">
@@ -299,7 +307,7 @@ export function ExamPage() {
               </Button>
             ) : (
               <>
-                <Button variant="outline" onClick={() => navigate("/courses/level-0")}>
+                <Button variant="outline" onClick={() => navigate(`/courses/${levelId}`)}>
                   {locale === "es" ? "Revisar Material" : "Review Material"}
                 </Button>
                 <Button variant="primary" onClick={handleStartExam}>

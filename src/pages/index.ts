@@ -1,5 +1,6 @@
 export { Dashboard } from "./Dashboard";
 export { Roadmap } from "./Roadmap";
+export { CoursePage } from "./CoursePage";
 export { Level0Course } from "./Level0Course";
 export { LessonPage } from "./LessonPage";
 export { LabsPage } from "./LabsPage";
