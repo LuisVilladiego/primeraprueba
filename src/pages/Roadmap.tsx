@@ -79,14 +79,14 @@ const levels: Level[] = [
   },
   { 
     id: 4, 
-    icon: "🔐", 
-    title: { es: "SSH", en: "SSH" },
-    description: { es: "Conexiones seguras y gestión remota de servidores", en: "Secure connections and remote server management" },
-    href: null,
-    lessons: 6,
-    labs: 5,
-    duration: 90,
-    skills: ["Keys", "Tunnels", "Config"]
+    icon: "⚙️", 
+    title: { es: "Procesos y Sistema", en: "Processes and System" },
+    description: { es: "ps, top, señales, jobs, memoria y prioridades CPU", en: "ps, top, signals, jobs, memory, and CPU priority" },
+    href: "/courses/level-4",
+    lessons: 7,
+    labs: 2,
+    duration: 240,
+    skills: ["ps/top", "señales", "nohup", "free/vmstat"]
   },
   { 
     id: 5, 

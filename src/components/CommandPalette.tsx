@@ -156,6 +156,7 @@ const levels: SearchItem[] = [
   { id: "level-1", type: "level", title: { es: "Nivel 1: Terminal y Comandos", en: "Level 1: Terminal and Commands" }, icon: <BookOpen className="h-5 w-5" />, path: "/courses/level-1", keywords: ["terminal", "archivos", "commands"] },
   { id: "level-2", type: "level", title: { es: "Nivel 2: Sistema de Archivos", en: "Level 2: Linux Filesystem" }, icon: <BookOpen className="h-5 w-5" />, path: "/courses/level-2", keywords: ["fhs", "find", "links", "df"] },
   { id: "level-3", type: "level", title: { es: "Nivel 3: Permisos y Usuarios", en: "Level 3: Permissions and Users" }, icon: <BookOpen className="h-5 w-5" />, path: "/courses/level-3", keywords: ["chmod", "sudo", "users", "permissions"] },
+  { id: "level-4", type: "level", title: { es: "Nivel 4: Procesos y Sistema", en: "Level 4: Processes and System" }, icon: <BookOpen className="h-5 w-5" />, path: "/courses/level-4", keywords: ["ps", "top", "kill", "signals", "nohup"] },
 ];
 
 interface CommandPaletteProps {

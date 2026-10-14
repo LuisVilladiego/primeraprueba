@@ -23,6 +23,12 @@ import {
   level3Labs,
   level3Exam,
 } from "@/content/modules/level-3";
+import {
+  level4Module,
+  level4Lessons,
+  level4Labs,
+  level4Exam,
+} from "@/content/modules/level-4";
 import { lesson01 } from "@/content/modules/level-0/lessons/lesson-0-1";
 import { lesson02 } from "@/content/modules/level-0/lessons/lesson-0-2";
 import { lesson03 } from "@/content/modules/level-0/lessons/lesson-0-3";
@@ -51,6 +57,13 @@ import { lesson34 } from "@/content/modules/level-3/lessons/lesson-3-4";
 import { lesson35 } from "@/content/modules/level-3/lessons/lesson-3-5";
 import { lesson36 } from "@/content/modules/level-3/lessons/lesson-3-6";
 import { lesson37 } from "@/content/modules/level-3/lessons/lesson-3-7";
+import { lesson41 } from "@/content/modules/level-4/lessons/lesson-4-1";
+import { lesson42 } from "@/content/modules/level-4/lessons/lesson-4-2";
+import { lesson43 } from "@/content/modules/level-4/lessons/lesson-4-3";
+import { lesson44 } from "@/content/modules/level-4/lessons/lesson-4-4";
+import { lesson45 } from "@/content/modules/level-4/lessons/lesson-4-5";
+import { lesson46 } from "@/content/modules/level-4/lessons/lesson-4-6";
+import { lesson47 } from "@/content/modules/level-4/lessons/lesson-4-7";
 
 export interface CourseConfig {
   module: Module;
@@ -100,6 +113,16 @@ const level3LessonBySlug: Record<string, Lesson> = {
   "sudo-su": lesson37,
 };
 
+const level4LessonBySlug: Record<string, Lesson> = {
+  "understanding-processes": lesson41,
+  "ps-command": lesson42,
+  "top-htop": lesson43,
+  "signals-kill": lesson44,
+  "background-foreground": lesson45,
+  "system-resources": lesson46,
+  "process-priority": lesson47,
+};
+
 export const courseRegistry: Record<string, CourseConfig> = {
   "level-0": {
     module: level0Module,
@@ -128,6 +151,13 @@ export const courseRegistry: Record<string, CourseConfig> = {
     labs: level3Labs,
     exam: level3Exam,
     lessonBySlug: level3LessonBySlug,
+  },
+  "level-4": {
+    module: level4Module,
+    lessons: level4Lessons,
+    labs: level4Labs,
+    exam: level4Exam,
+    lessonBySlug: level4LessonBySlug,
   },
 };
 

@@ -1,0 +1,555 @@
+import type { Module, Lesson, Lab, Exam, Skill } from "@/types";
+
+export const level4Module: Module = {
+  id: "level-4",
+  courseId: "linux-academy",
+  slug: "processes-system",
+  level: 4,
+  title: {
+    es: "Procesos y Sistema",
+    en: "Processes and System",
+  },
+  description: {
+    es: "Monitorea y controla procesos, señales, jobs en background y recursos CPU/RAM como un administrador.",
+    en: "Monitor and control processes, signals, background jobs, and CPU/RAM resources like an admin.",
+  },
+  icon: "⚙️",
+  order: 4,
+  lessons: [],
+  labs: [],
+  exam: null,
+  project: null,
+  passingScore: 80,
+  prerequisites: ["level-3"],
+  skills: ["process-management", "unix-signals", "system-resources", "job-control"],
+};
+
+export const level4Lessons: Lesson[] = [
+  {
+    id: "lesson-4-1",
+    moduleId: "level-4",
+    slug: "understanding-processes",
+    title: { es: "Entendiendo los Procesos", en: "Understanding Processes" },
+    description: {
+      es: "PID, PPID, árbol de procesos, estados y /proc.",
+      en: "PID, PPID, process tree, states, and /proc.",
+    },
+    order: 1,
+    duration: 35,
+    contentBlocks: [],
+    exercises: [],
+    quiz: null,
+  },
+  {
+    id: "lesson-4-2",
+    moduleId: "level-4",
+    slug: "ps-command",
+    title: { es: "Monitoreo con ps", en: "Monitoring with ps" },
+    description: {
+      es: "Lista, filtra y formatea procesos con ps.",
+      en: "List, filter, and format processes with ps.",
+    },
+    order: 2,
+    duration: 35,
+    contentBlocks: [],
+    exercises: [],
+    quiz: null,
+  },
+  {
+    id: "lesson-4-3",
+    moduleId: "level-4",
+    slug: "top-htop",
+    title: { es: "top y htop en Tiempo Real", en: "top and htop in Real Time" },
+    description: {
+      es: "CPU, memoria, load average e interacción en vivo.",
+      en: "CPU, memory, load average, and live interaction.",
+    },
+    order: 3,
+    duration: 40,
+    contentBlocks: [],
+    exercises: [],
+    quiz: null,
+  },
+  {
+    id: "lesson-4-4",
+    moduleId: "level-4",
+    slug: "signals-kill",
+    title: { es: "Señales y kill", en: "Signals and kill" },
+    description: {
+      es: "SIGTERM, SIGKILL, SIGINT y cuándo usar cada una.",
+      en: "SIGTERM, SIGKILL, SIGINT, and when to use each.",
+    },
+    order: 4,
+    duration: 35,
+    contentBlocks: [],
+    exercises: [],
+    quiz: null,
+  },
+  {
+    id: "lesson-4-5",
+    moduleId: "level-4",
+    slug: "background-foreground",
+    title: { es: "Background y Foreground", en: "Background and Foreground" },
+    description: {
+      es: "jobs, bg, fg, nohup y control desde la shell.",
+      en: "jobs, bg, fg, nohup, and shell job control.",
+    },
+    order: 5,
+    duration: 35,
+    contentBlocks: [],
+    exercises: [],
+    quiz: null,
+  },
+  {
+    id: "lesson-4-6",
+    moduleId: "level-4",
+    slug: "system-resources",
+    title: { es: "Recursos: free, uptime, vmstat", en: "Resources: free, uptime, vmstat" },
+    description: {
+      es: "Memoria, swap, load average y estadísticas.",
+      en: "Memory, swap, load average, and statistics.",
+    },
+    order: 6,
+    duration: 30,
+    contentBlocks: [],
+    exercises: [],
+    quiz: null,
+  },
+  {
+    id: "lesson-4-7",
+    moduleId: "level-4",
+    slug: "process-priority",
+    title: { es: "Prioridad: nice y renice", en: "Priority: nice and renice" },
+    description: {
+      es: "Niceness, scheduling y fair share de CPU.",
+      en: "Niceness, scheduling, and CPU fair share.",
+    },
+    order: 7,
+    duration: 30,
+    contentBlocks: [],
+    exercises: [],
+    quiz: null,
+  },
+];
+
+export const level4Labs: Lab[] = [
+  {
+    id: "lab-4-1",
+    moduleId: "level-4",
+    slug: "process-detective",
+    title: { es: "Detective de procesos", en: "Process detective" },
+    description: {
+      es: "Identifica consumo de CPU/RAM y posibles zombies.",
+      en: "Identify CPU/RAM usage and possible zombies.",
+    },
+    objectives: {
+      es: [
+        "Top 5 procesos por CPU con ps",
+        "Uso de memoria con ps y free",
+        "Buscar estado Z (zombie)",
+        "Informe en process_report.txt",
+      ],
+      en: [
+        "Top 5 CPU processes with ps",
+        "Memory usage with ps and free",
+        "Find Z (zombie) state",
+        "Report in process_report.txt",
+      ],
+    },
+    prerequisites: { es: ["Lecciones 4-1 a 4-3"], en: ["Lessons 4-1 to 4-3"] },
+    instructions: {
+      es: [
+        { step: 1, instruction: "ps aux --sort=-%cpu | head -6", expectedResult: "Ranking CPU" },
+        { step: 2, instruction: "ps aux --sort=-%mem | head -6", expectedResult: "Ranking RAM" },
+        { step: 3, instruction: "ps aux | awk '$8 ~ /Z/ {print}'", expectedResult: "Zombies si hay" },
+        { step: 4, instruction: "Guarda resumen en ~/process_report.txt", expectedResult: "Informe" },
+      ],
+      en: [
+        { step: 1, instruction: "ps aux --sort=-%cpu | head -6", expectedResult: "CPU ranking" },
+        { step: 2, instruction: "ps aux --sort=-%mem | head -6", expectedResult: "RAM ranking" },
+        { step: 3, instruction: "ps aux | awk '$8 ~ /Z/ {print}'", expectedResult: "Zombies if any" },
+        { step: 4, instruction: "Save summary to ~/process_report.txt", expectedResult: "Report" },
+      ],
+    },
+    hints: {
+      es: ["STAT en ps muestra Z para zombie"],
+      en: ["STAT column shows Z for zombie"],
+    },
+    solution: {
+      es: "Combina ps con sort y free para contexto de memoria global.",
+      en: "Combine ps with sort and free for global memory context.",
+    },
+    validationCriteria: [],
+    difficulty: "INTERMEDIATE",
+    estimatedTime: 35,
+    order: 1,
+  },
+  {
+    id: "lab-4-2",
+    moduleId: "level-4",
+    slug: "process-control",
+    title: { es: "Control de procesos", en: "Process control" },
+    description: {
+      es: "Practica jobs, señales y nohup.",
+      en: "Practice jobs, signals, and nohup.",
+    },
+    objectives: {
+      es: [
+        "Lanzar sleep en background",
+        "Pausar con Ctrl+Z y reanudar con bg/fg",
+        "Terminar con kill y probar señales",
+      ],
+      en: [
+        "Launch sleep in background",
+        "Pause with Ctrl+Z and resume with bg/fg",
+        "Terminate with kill and try signals",
+      ],
+    },
+    prerequisites: { es: ["Lecciones 4-4 y 4-5"], en: ["Lessons 4-4 and 4-5"] },
+    instructions: {
+      es: [
+        { step: 1, instruction: "sleep 300 &  y jobs -l", expectedResult: "Job en background" },
+        { step: 2, instruction: "sleep 60 (Ctrl+Z) → bg", expectedResult: "Reanudado en bg" },
+        { step: 3, instruction: "kill %1 o kill PID", expectedResult: "Job terminado" },
+        { step: 4, instruction: "nohup sleep 10 &", expectedResult: "Ignora SIGHUP" },
+      ],
+      en: [
+        { step: 1, instruction: "sleep 300 &  and jobs -l", expectedResult: "Background job" },
+        { step: 2, instruction: "sleep 60 (Ctrl+Z) → bg", expectedResult: "Resumed in bg" },
+        { step: 3, instruction: "kill %1 or kill PID", expectedResult: "Job ended" },
+        { step: 4, instruction: "nohup sleep 10 &", expectedResult: "Ignores SIGHUP" },
+      ],
+    },
+    hints: { es: ["jobs -l muestra PID"], en: ["jobs -l shows PID"] },
+    solution: {
+      es: "Prefiere SIGTERM antes que SIGKILL para cierre limpio.",
+      en: "Prefer SIGTERM before SIGKILL for clean shutdown.",
+    },
+    validationCriteria: [],
+    difficulty: "INTERMEDIATE",
+    estimatedTime: 40,
+    order: 2,
+  },
+];
+
+export const level4Exam: Exam = {
+  id: "exam-level-4",
+  moduleId: "level-4",
+  title: {
+    es: "Examen - Procesos y Sistema",
+    en: "Exam - Processes and System",
+  },
+  description: {
+    es: "Procesos, ps/top, señales, jobs y recursos del sistema.",
+    en: "Processes, ps/top, signals, jobs, and system resources.",
+  },
+  questions: [
+    {
+      id: "q-4-1",
+      type: "MULTIPLE_CHOICE",
+      question: {
+        es: "¿Qué señal envía kill por defecto?",
+        en: "What signal does kill send by default?",
+      },
+      options: {
+        es: ["SIGKILL (9)", "SIGTERM (15)", "SIGHUP (1)", "SIGINT (2)"],
+        en: ["SIGKILL (9)", "SIGTERM (15)", "SIGHUP (1)", "SIGINT (2)"],
+      },
+      correctAnswer: "1",
+      explanation: {
+        es: "SIGTERM permite apagado limpio; SIGKILL es último recurso.",
+        en: "SIGTERM allows clean shutdown; SIGKILL is last resort.",
+      },
+      points: 10,
+      difficulty: "BEGINNER",
+      category: "signals",
+    },
+    {
+      id: "q-4-2",
+      type: "MULTIPLE_CHOICE",
+      question: {
+        es: "¿Qué hace command &?",
+        en: "What does command & do?",
+      },
+      options: {
+        es: ["Ejecuta como root", "Ejecuta en background", "Repite el comando", "Pausa"],
+        en: ["Runs as root", "Runs in background", "Repeats command", "Pauses"],
+      },
+      correctAnswer: "1",
+      explanation: {
+        es: "& devuelve el prompt mientras el proceso sigue.",
+        en: "& returns the prompt while the process continues.",
+      },
+      points: 10,
+      difficulty: "BEGINNER",
+      category: "jobs",
+    },
+    {
+      id: "q-4-3",
+      type: "MULTIPLE_CHOICE",
+      question: {
+        es: "¿Qué muestra ps aux?",
+        en: "What does ps aux show?",
+      },
+      options: {
+        es: [
+          "Solo tus procesos",
+          "Todos los procesos con detalle",
+          "Solo background",
+          "Ordenados por CPU automáticamente",
+        ],
+        en: [
+          "Only your processes",
+          "All processes with detail",
+          "Only background",
+          "Auto-sorted by CPU",
+        ],
+      },
+      correctAnswer: "1",
+      explanation: {
+        es: "a=all users, u=user-oriented, x=sin tty.",
+        en: "a=all users, u=user-oriented, x=without tty.",
+      },
+      points: 10,
+      difficulty: "BEGINNER",
+      category: "ps",
+    },
+    {
+      id: "q-4-4",
+      type: "MULTIPLE_CHOICE",
+      question: {
+        es: "SIGTERM vs SIGKILL",
+        en: "SIGTERM vs SIGKILL",
+      },
+      options: {
+        es: [
+          "SIGTERM puede ignorarse, SIGKILL no",
+          "Son iguales",
+          "SIGKILL es más lento",
+          "SIGTERM requiere sudo",
+        ],
+        en: [
+          "SIGTERM can be ignored, SIGKILL cannot",
+          "They are equal",
+          "SIGKILL is slower",
+          "SIGTERM requires sudo",
+        ],
+      },
+      correctAnswer: "0",
+      explanation: {
+        es: "KILL no puede capturarse ni ignorarse.",
+        en: "KILL cannot be caught or ignored.",
+      },
+      points: 10,
+      difficulty: "INTERMEDIATE",
+      category: "signals",
+    },
+    {
+      id: "q-4-5",
+      type: "MULTIPLE_CHOICE",
+      question: {
+        es: "Comando para memoria del sistema",
+        en: "Command for system memory",
+      },
+      options: {
+        es: ["mem", "free", "memory", "df"],
+        en: ["mem", "free", "memory", "df"],
+      },
+      correctAnswer: "1",
+      explanation: {
+        es: "free -h muestra RAM y swap legibles.",
+        en: "free -h shows readable RAM and swap.",
+      },
+      points: 10,
+      difficulty: "BEGINNER",
+      category: "resources",
+    },
+    {
+      id: "q-4-6",
+      type: "MULTIPLE_CHOICE",
+      question: {
+        es: "¿Qué es un proceso zombie?",
+        en: "What is a zombie process?",
+      },
+      options: {
+        es: [
+          "Consume mucha RAM",
+          "Terminó pero el padre no hizo wait()",
+          "Está en background",
+          "Es de root",
+        ],
+        en: [
+          "Uses lots of RAM",
+          "Exited but parent did not wait()",
+          "Is in background",
+          "Is root-owned",
+        ],
+      },
+      correctAnswer: "1",
+      explanation: {
+        es: "Estado Z en ps; libera entrada cuando el padre recoge el exit code.",
+        en: "Z state in ps; entry freed when parent reaps exit code.",
+      },
+      points: 10,
+      difficulty: "INTERMEDIATE",
+      category: "processes",
+    },
+    {
+      id: "q-4-7",
+      type: "MULTIPLE_CHOICE",
+      question: {
+        es: "Pausar proceso en foreground",
+        en: "Pause foreground process",
+      },
+      options: {
+        es: ["Ctrl+C", "Ctrl+Z", "Ctrl+D", "Ctrl+P"],
+        en: ["Ctrl+C", "Ctrl+Z", "Ctrl+D", "Ctrl+P"],
+      },
+      correctAnswer: "1",
+      explanation: {
+        es: "Ctrl+Z envía SIGTSTP; Ctrl+C envía SIGINT.",
+        en: "Ctrl+Z sends SIGTSTP; Ctrl+C sends SIGINT.",
+      },
+      points: 10,
+      difficulty: "BEGINNER",
+      category: "jobs",
+    },
+    {
+      id: "q-4-8",
+      type: "MULTIPLE_CHOICE",
+      question: {
+        es: "¿Qué hace nohup?",
+        en: "What does nohup do?",
+      },
+      options: {
+        es: [
+          "Más velocidad",
+          "Sigue tras cerrar terminal (ignora SIGHUP)",
+          "Sin output",
+          "Sin CPU",
+        ],
+        en: [
+          "More speed",
+          "Continues after terminal close (ignores SIGHUP)",
+          "No output",
+          "No CPU",
+        ],
+      },
+      correctAnswer: "1",
+      explanation: {
+        es: "Útil para jobs largos en servidores remotos.",
+        en: "Useful for long jobs on remote servers.",
+      },
+      points: 10,
+      difficulty: "BEGINNER",
+      category: "jobs",
+    },
+    {
+      id: "q-4-9",
+      type: "MULTIPLE_CHOICE",
+      question: {
+        es: "Load average 4.0 en CPU de 4 núcleos significa…",
+        en: "Load average 4.0 on a 4-core CPU means…",
+      },
+      options: {
+        es: [
+          "CPU al 400%",
+          "Cola de ejecución ~ saturada (1 por núcleo)",
+          "Memoria llena",
+          "Disco lento",
+        ],
+        en: [
+          "CPU at 400%",
+          "Run queue ~ saturated (1 per core)",
+          "Memory full",
+          "Disk slow",
+        ],
+      },
+      correctAnswer: "1",
+      explanation: {
+        es: "Load ≈ procesos en cola; compara con número de CPUs.",
+        en: "Load ≈ runnable queue; compare to CPU count.",
+      },
+      points: 10,
+      difficulty: "INTERMEDIATE",
+      category: "resources",
+    },
+    {
+      id: "q-4-10",
+      type: "MULTIPLE_CHOICE",
+      question: {
+        es: "nice 10 vs nice -10",
+        en: "nice 10 vs nice -10",
+      },
+      options: {
+        es: [
+          "10 es más prioritario",
+          "-10 es más prioritario (requiere permiso)",
+          "No hay diferencia",
+          "Solo afecta RAM",
+        ],
+        en: [
+          "10 is higher priority",
+          "-10 is higher priority (needs privilege)",
+          "No difference",
+          "Only affects RAM",
+        ],
+      },
+      correctAnswer: "1",
+      explanation: {
+        es: "Niceness menor = más CPU; negativo suele requerir root/capability.",
+        en: "Lower niceness = more CPU; negative often needs root/capability.",
+      },
+      points: 10,
+      difficulty: "INTERMEDIATE",
+      category: "priority",
+    },
+  ],
+  timeLimit: 30,
+  passingScore: 80,
+  maxAttempts: null,
+  shuffleQuestions: true,
+};
+
+export const level4Skills: Skill[] = [
+  {
+    id: "process-management",
+    slug: "process-management",
+    name: { es: "Gestión de procesos", en: "Process management" },
+    description: { es: "PID, árbol, /proc", en: "PID, tree, /proc" },
+    category: "system",
+    icon: "🔄",
+    relatedModules: ["level-4"],
+    order: 1,
+  },
+  {
+    id: "unix-signals",
+    slug: "unix-signals",
+    name: { es: "Señales Unix", en: "Unix signals" },
+    description: { es: "kill, SIGTERM, SIGKILL", en: "kill, SIGTERM, SIGKILL" },
+    category: "system",
+    icon: "📡",
+    relatedModules: ["level-4"],
+    order: 2,
+  },
+  {
+    id: "system-resources",
+    slug: "system-resources",
+    name: { es: "Recursos del sistema", en: "System resources" },
+    description: { es: "free, load, vmstat", en: "free, load, vmstat" },
+    category: "system",
+    icon: "📊",
+    relatedModules: ["level-4"],
+    order: 3,
+  },
+  {
+    id: "job-control",
+    slug: "job-control",
+    name: { es: "Control de jobs", en: "Job control" },
+    description: { es: "bg, fg, nohup", en: "bg, fg, nohup" },
+    category: "system",
+    icon: "🎛️",
+    relatedModules: ["level-4"],
+    order: 4,
+  },
+];
