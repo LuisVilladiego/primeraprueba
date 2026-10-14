@@ -17,6 +17,12 @@ import {
   level2Labs,
   level2Exam,
 } from "@/content/modules/level-2";
+import {
+  level3Module,
+  level3Lessons,
+  level3Labs,
+  level3Exam,
+} from "@/content/modules/level-3";
 import { lesson01 } from "@/content/modules/level-0/lessons/lesson-0-1";
 import { lesson02 } from "@/content/modules/level-0/lessons/lesson-0-2";
 import { lesson03 } from "@/content/modules/level-0/lessons/lesson-0-3";
@@ -38,6 +44,13 @@ import { lesson24 } from "@/content/modules/level-2/lessons/lesson-2-4";
 import { lesson25 } from "@/content/modules/level-2/lessons/lesson-2-5";
 import { lesson26 } from "@/content/modules/level-2/lessons/lesson-2-6";
 import { lesson27 } from "@/content/modules/level-2/lessons/lesson-2-7";
+import { lesson31 } from "@/content/modules/level-3/lessons/lesson-3-1";
+import { lesson32 } from "@/content/modules/level-3/lessons/lesson-3-2";
+import { lesson33 } from "@/content/modules/level-3/lessons/lesson-3-3";
+import { lesson34 } from "@/content/modules/level-3/lessons/lesson-3-4";
+import { lesson35 } from "@/content/modules/level-3/lessons/lesson-3-5";
+import { lesson36 } from "@/content/modules/level-3/lessons/lesson-3-6";
+import { lesson37 } from "@/content/modules/level-3/lessons/lesson-3-7";
 
 export interface CourseConfig {
   module: Module;
@@ -77,6 +90,16 @@ const level2LessonBySlug: Record<string, Lesson> = {
   "locate-updatedb": lesson27,
 };
 
+const level3LessonBySlug: Record<string, Lesson> = {
+  "understanding-permissions": lesson31,
+  "chmod-command": lesson32,
+  "users-groups": lesson33,
+  "chown-chgrp": lesson34,
+  "special-permissions": lesson35,
+  "umask": lesson36,
+  "sudo-su": lesson37,
+};
+
 export const courseRegistry: Record<string, CourseConfig> = {
   "level-0": {
     module: level0Module,
@@ -98,6 +121,13 @@ export const courseRegistry: Record<string, CourseConfig> = {
     labs: level2Labs,
     exam: level2Exam,
     lessonBySlug: level2LessonBySlug,
+  },
+  "level-3": {
+    module: level3Module,
+    lessons: level3Lessons,
+    labs: level3Labs,
+    exam: level3Exam,
+    lessonBySlug: level3LessonBySlug,
   },
 };
 

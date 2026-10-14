@@ -43,7 +43,12 @@ The database is refreshed with \`sudo updatedb\` (or daily cron). New files may 
 | Datos | Tiempo real | Base desactualizable |
 | Permisos | Respeta acceso | Indexa lo permitido al build |
 
-Usa locate para búsquedas amplias; find cuando necesitas precisión o criterios complejos.`,
+Usa locate para búsquedas amplias; find cuando necesitas precisión o criterios complejos.
+
+\`\`\`bash
+sudo updatedb
+locate -b '\\passwd$'
+\`\`\``,
       },
       en: {
         title: "find vs locate",
@@ -53,7 +58,12 @@ Usa locate para búsquedas amplias; find cuando necesitas precisión o criterios
 | Data | Real time | Possibly stale database |
 | Permissions | Respects access | Indexes what updatedb could read |
 
-Use locate for broad searches; find when you need precision or complex criteria.`,
+Use locate for broad searches; find when you need precision or complex criteria.
+
+\`\`\`bash
+sudo updatedb
+locate -b '\\passwd$'
+\`\`\``,
       },
     },
   },

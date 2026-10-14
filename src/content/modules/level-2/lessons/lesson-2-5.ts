@@ -22,7 +22,12 @@ du -sh /var/log    # resumen de un path
 du -h --max-depth=1 ~   # por subcarpeta en home
 \`\`\`
 
-Regla: df para “¿me quedo sin disco?”; du para “¿qué carpeta pesa?”`,
+Regla: df para “¿me quedo sin disco?”; du para “¿qué carpeta pesa?”
+
+\`\`\`bash
+df -i              # inodos libres (importante en muchos archivos pequeños)
+du -sh * | sort -h # carpetas ordenadas por tamaño
+\`\`\``,
       },
       en: {
         title: "df vs du",
@@ -40,7 +45,12 @@ du -sh /var/log    # summary for a path
 du -h --max-depth=1 ~   # per subfolder in home
 \`\`\`
 
-Rule: df for “running out of disk?”; du for “which folder is heavy?”`,
+Rule: df for “running out of disk?”; du for “which folder is heavy?”
+
+\`\`\`bash
+df -i              # free inodes (many small files)
+du -sh * | sort -h # folders sorted by size
+\`\`\``,
       },
     },
   },

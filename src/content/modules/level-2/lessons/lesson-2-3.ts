@@ -41,13 +41,34 @@ ls -li file.txt hard.txt     # same inode number
         title: "Enlaces rotos",
         text: `Si borras el destino de un enlace simbólico, el enlace queda roto. \`ls -l\` lo muestra en rojo (según terminal).
 
-\`readlink enlace\` muestra el destino.`,
+\`readlink enlace\` muestra el destino.
+
+Los enlaces duros no cruzan particiones y no suelen usarse en directorios.`,
       },
       en: {
         title: "Broken links",
         text: `If you delete a symlink target, the link breaks. \`ls -l\` may show it in red (depending on terminal).
 
-\`readlink link\` shows the target.`,
+\`readlink link\` shows the target.
+
+Hard links cannot cross filesystems and are rarely used on directories.`,
+      },
+    },
+  },
+  {
+    id: "block-2-3-3",
+    type: "TIP",
+    order: 3,
+    content: {
+      es: {
+        title: "Cuándo usar cada uno",
+        text: `- **Simbólico:** accesos cortos, configs, cross-filesystem
+- **Duro:** backups del mismo archivo, sin puntero roto si mueves el original`,
+      },
+      en: {
+        title: "When to use which",
+        text: `- **Symbolic:** short paths, configs, cross-filesystem
+- **Hard:** same-file aliases, no broken link if original is moved`,
       },
     },
   },

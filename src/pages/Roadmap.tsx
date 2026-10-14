@@ -68,14 +68,14 @@ const levels: Level[] = [
   },
   { 
     id: 3, 
-    icon: "🌐", 
-    title: { es: "Networking", en: "Networking" },
-    description: { es: "Configura y diagnostica redes en Linux", en: "Configure and diagnose networks on Linux" },
-    href: null,
-    lessons: 10,
-    labs: 8,
-    duration: 200,
-    skills: ["TCP/IP", "DNS", "Firewall"]
+    icon: "🔐", 
+    title: { es: "Permisos y Usuarios", en: "Permissions and Users" },
+    description: { es: "Permisos rwx, usuarios, SUID/SGID, umask y sudo", en: "rwx permissions, users, SUID/SGID, umask, and sudo" },
+    href: "/courses/level-3",
+    lessons: 7,
+    labs: 2,
+    duration: 225,
+    skills: ["chmod", "usuarios", "sudo", "SUID"]
   },
   { 
     id: 4, 

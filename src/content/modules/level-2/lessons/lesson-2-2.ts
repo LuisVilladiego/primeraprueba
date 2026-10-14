@@ -46,8 +46,27 @@ ls -ld /etc        # drwx...
   },
   {
     id: "block-2-2-2",
-    type: "TIP",
+    type: "KEY_CONCEPT",
     order: 2,
+    content: {
+      es: {
+        title: "Dispositivos y sockets",
+        text: `Dispositivos de **bloque** (discos) y **carácter** (terminal, /dev/null) aparecen en \`/dev\`.
+
+**Sockets** (\`s\`) y **pipes** (\`p\`) permiten IPC entre procesos. En servidores verás sockets bajo \`/run\` o \`/var/run\`.`,
+      },
+      en: {
+        title: "Devices and sockets",
+        text: `**Block** devices (disks) and **character** devices (terminal, /dev/null) live under \`/dev\`.
+
+**Sockets** (\`s\`) and **pipes** (\`p\`) enable IPC between processes. On servers you'll see sockets under \`/run\` or \`/var/run\`.`,
+      },
+    },
+  },
+  {
+    id: "block-2-2-3",
+    type: "TIP",
+    order: 3,
     content: {
       es: {
         title: "Comando file",
