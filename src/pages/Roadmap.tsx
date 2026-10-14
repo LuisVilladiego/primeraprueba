@@ -57,14 +57,14 @@ const levels: Level[] = [
   },
   { 
     id: 2, 
-    icon: "⚙️", 
-    title: { es: "Administración Linux", en: "Linux Administration" },
-    description: { es: "Gestiona servicios, paquetes y configuraciones del sistema", en: "Manage services, packages, and system configurations" },
-    href: null,
-    lessons: 12,
-    labs: 10,
-    duration: 240,
-    skills: ["systemd", "apt/yum", "logs"]
+    icon: "📂", 
+    title: { es: "Sistema de Archivos de Linux", en: "Linux Filesystem" },
+    description: { es: "FHS, enlaces, metadata, uso de disco y búsqueda con find/locate", en: "FHS, links, metadata, disk usage, and search with find/locate" },
+    href: "/courses/level-2",
+    lessons: 7,
+    labs: 2,
+    duration: 215,
+    skills: ["FHS", "Enlaces", "find", "df/du"]
   },
   { 
     id: 3, 
