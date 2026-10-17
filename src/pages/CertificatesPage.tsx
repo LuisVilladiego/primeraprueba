@@ -25,102 +25,22 @@ interface Certificate {
 }
 
 const certificates: Certificate[] = [
-  {
-    id: "level-0",
-    title: { es: "Fundamentos de Computación", en: "Computing Fundamentals" },
-    description: { 
-      es: "Dominio de conceptos básicos de computación y línea de comandos",
-      en: "Mastery of basic computing concepts and command line"
-    },
-    level: 0,
-    requiredProgress: 100,
-    icon: "🎓",
-    color: "from-blue-500 to-cyan-500",
-  },
-  {
-    id: "level-1",
-    title: { es: "Administrador Linux Junior", en: "Junior Linux Administrator" },
-    description: { 
-      es: "Conocimientos fundamentales de administración de sistemas Linux",
-      en: "Fundamental knowledge of Linux system administration"
-    },
-    level: 1,
-    requiredProgress: 100,
-    icon: "🐧",
-    color: "from-green-500 to-emerald-500",
-  },
-  {
-    id: "level-2",
-    title: { es: "Administrador de Redes", en: "Network Administrator" },
-    description: { 
-      es: "Competencia en configuración y gestión de redes",
-      en: "Competency in network configuration and management"
-    },
-    level: 2,
-    requiredProgress: 100,
-    icon: "🌐",
-    color: "from-purple-500 to-pink-500",
-  },
-  {
-    id: "level-3",
-    title: { es: "Especialista en Shell Scripting", en: "Shell Scripting Specialist" },
-    description: { 
-      es: "Habilidad avanzada en automatización con scripts",
-      en: "Advanced skill in automation with scripts"
-    },
-    level: 3,
-    requiredProgress: 100,
-    icon: "📜",
-    color: "from-orange-500 to-red-500",
-  },
-  {
-    id: "level-4",
-    title: { es: "Administrador de Servidores", en: "Server Administrator" },
-    description: { 
-      es: "Experiencia en gestión de servidores web y de aplicaciones",
-      en: "Experience in web and application server management"
-    },
-    level: 4,
-    requiredProgress: 100,
-    icon: "🖥️",
-    color: "from-indigo-500 to-blue-500",
-  },
-  {
-    id: "level-5",
-    title: { es: "Especialista en Seguridad", en: "Security Specialist" },
-    description: { 
-      es: "Conocimientos en hardening y seguridad de sistemas",
-      en: "Knowledge in system hardening and security"
-    },
-    level: 5,
-    requiredProgress: 100,
-    icon: "🔒",
-    color: "from-red-500 to-rose-500",
-  },
-  {
-    id: "docker",
-    title: { es: "Docker Certified", en: "Docker Certified" },
-    description: { 
-      es: "Dominio de contenedores y Docker",
-      en: "Mastery of containers and Docker"
-    },
-    level: 6,
-    requiredProgress: 100,
-    icon: "🐳",
-    color: "from-sky-500 to-blue-500",
-  },
-  {
-    id: "kubernetes",
-    title: { es: "Kubernetes Administrator", en: "Kubernetes Administrator" },
-    description: { 
-      es: "Certificación en orquestación de contenedores con K8s",
-      en: "Certification in container orchestration with K8s"
-    },
-    level: 15,
-    requiredProgress: 100,
-    icon: "☸️",
-    color: "from-blue-600 to-indigo-600",
-  },
+  { id: "level-0", level: 0, icon: "🎯", color: "from-blue-500 to-cyan-500", requiredProgress: 100, title: { es: "Fundamentos de Computación", en: "Computing Fundamentals" }, description: { es: "Base sólida en hardware, SO, procesos y CLI.", en: "Solid base in hardware, OS, processes, and CLI." } },
+  { id: "level-1", level: 1, icon: "💻", color: "from-green-500 to-emerald-500", requiredProgress: 100, title: { es: "Terminal y Comandos Básicos", en: "Terminal and Basic Commands" }, description: { es: "Navegación, archivos y ayuda en la shell.", en: "Navigation, files, and shell help." } },
+  { id: "level-2", level: 2, icon: "📁", color: "from-purple-500 to-pink-500", requiredProgress: 100, title: { es: "Sistema de Archivos Linux", en: "Linux File System" }, description: { es: "FHS, enlaces, búsqueda y uso de disco.", en: "FHS, links, search, and disk usage." } },
+  { id: "level-3", level: 3, icon: "🔐", color: "from-orange-500 to-red-500", requiredProgress: 100, title: { es: "Permisos y Usuarios", en: "Permissions and Users" }, description: { es: "Modelo rwx, usuarios, grupos y sudo.", en: "rwx model, users, groups, and sudo." } },
+  { id: "level-4", level: 4, icon: "⚙️", color: "from-indigo-500 to-blue-500", requiredProgress: 100, title: { es: "Procesos y Gestión del Sistema", en: "Processes and System Management" }, description: { es: "Señales, monitoreo, jobs y recursos.", en: "Signals, monitoring, jobs, and resources." } },
+  { id: "level-5", level: 5, icon: "📜", color: "from-amber-500 to-orange-500", requiredProgress: 100, title: { es: "Shell Scripting Básico", en: "Basic Shell Scripting" }, description: { es: "Automatización con Bash en producción.", en: "Bash automation for production." } },
+  { id: "level-6", level: 6, icon: "✏️", color: "from-teal-500 to-cyan-500", requiredProgress: 100, title: { es: "Editores de Texto", en: "Text Editors" }, description: { es: "Vim y nano para configuración y código.", en: "Vim and nano for config and code." } },
+  { id: "level-7", level: 7, icon: "🔍", color: "from-violet-500 to-purple-500", requiredProgress: 100, title: { es: "Procesamiento de Texto", en: "Text Processing" }, description: { es: "grep, sed, awk y expresiones regulares.", en: "grep, sed, awk, and regular expressions." } },
+  { id: "level-8", level: 8, icon: "📦", color: "from-sky-500 to-blue-500", requiredProgress: 100, title: { es: "Gestión de Paquetes", en: "Package Management" }, description: { es: "apt, dnf, snap y repositorios.", en: "apt, dnf, snap, and repositories." } },
+  { id: "level-9", level: 9, icon: "🌐", color: "from-blue-600 to-indigo-500", requiredProgress: 100, title: { es: "Networking Básico", en: "Basic Networking" }, description: { es: "TCP/IP, DNS, diagnóstico y firewalls.", en: "TCP/IP, DNS, diagnostics, and firewalls." } },
+  { id: "level-10", level: 10, icon: "🔧", color: "from-zinc-500 to-slate-600", requiredProgress: 100, title: { es: "Servicios y systemd", en: "Services and systemd" }, description: { es: "Units, journalctl, timers y servicios web.", en: "Units, journalctl, timers, and web services." } },
+  { id: "level-11", level: 11, icon: "🔑", color: "from-red-500 to-rose-500", requiredProgress: 100, title: { es: "SSH y Seguridad", en: "SSH and Security" }, description: { es: "Acceso remoto, llaves y hardening.", en: "Remote access, keys, and hardening." } },
+  { id: "level-12", level: 12, icon: "🚀", color: "from-fuchsia-500 to-pink-500", requiredProgress: 100, title: { es: "Scripting Avanzado", en: "Advanced Scripting" }, description: { es: "Scripts robustos, cron y debugging.", en: "Robust scripts, cron, and debugging." } },
+  { id: "level-13", level: 13, icon: "🌿", color: "from-lime-500 to-green-600", requiredProgress: 100, title: { es: "Git y Control de Versiones", en: "Git and Version Control" }, description: { es: "Colaboración, branches y CI/CD.", en: "Collaboration, branches, and CI/CD." } },
+  { id: "level-14", level: 14, icon: "🐳", color: "from-cyan-500 to-blue-600", requiredProgress: 100, title: { es: "Docker Fundamentos", en: "Docker Fundamentals" }, description: { es: "Imágenes, Dockerfile, redes y Compose.", en: "Images, Dockerfile, networking, and Compose." } },
+  { id: "level-15", level: 15, icon: "☸️", color: "from-blue-600 to-indigo-600", requiredProgress: 100, title: { es: "Kubernetes Fundamentos", en: "Kubernetes Fundamentals" }, description: { es: "Pods, Deployments, Services e Helm.", en: "Pods, Deployments, Services, and Helm." } },
 ];
 
 export function CertificatesPage() {
@@ -129,13 +49,20 @@ export function CertificatesPage() {
   const { getModuleProgress, passedExams } = useProgressStore();
 
   const getCertificateStatus = (cert: Certificate) => {
-    if (cert.level === 0) {
-      const progress = getModuleProgress("level-0");
-      const examPassed = passedExams.includes("level-0-exam");
-      if (progress >= 100 && examPassed) return "earned";
-      if (progress > 0) return "in-progress";
-      return "locked";
-    }
+    const moduleId = cert.id;
+    const examId = `exam-${moduleId}`;
+    const unlocked =
+      cert.level === 0 ||
+      passedExams.includes(`exam-level-${cert.level - 1}`) ||
+      getModuleProgress(`level-${cert.level - 1}`) >= 100;
+
+    if (!unlocked) return "locked";
+
+    const progress = getModuleProgress(moduleId);
+    const examPassed = passedExams.includes(examId);
+
+    if (progress >= cert.requiredProgress && examPassed) return "earned";
+    if (progress > 0 || examPassed) return "in-progress";
     return "locked";
   };
 
