@@ -52,15 +52,30 @@ Pinguiñoño es una aplicación de escritorio nativa para Linux que te enseña L
 
 ## Instalación
 
+### Pop!_OS / Ubuntu (app instalada en tu PC)
+
+Desde la carpeta del proyecto en **tu máquina local** (no en un servidor remoto):
+
 ```bash
-# Instalar dependencias de Node
+chmod +x scripts/install-popos.sh
+./scripts/install-popos.sh
+```
+
+El script instala dependencias del sistema, Node.js y Rust si faltan, compila la app y registra el paquete `.deb`. Luego abre **Pinguiñoño** desde el menú de aplicaciones.
+
+Si ya tienes el entorno listo y solo quieres compilar e instalar:
+
+```bash
 npm install
-
-# Ejecutar en desarrollo
-npm run tauri dev
-
-# Construir para producción
 npm run tauri build
+sudo apt install ./src-tauri/target/release/bundle/deb/*.deb
+```
+
+### Desarrollo
+
+```bash
+npm install
+npm run tauri dev
 ```
 
 ## Estructura del Proyecto
