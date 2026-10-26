@@ -1,4 +1,4 @@
-import type { ContentBlock, Exam, Lab, Lesson, Module, QuizQuestion } from "@/types";
+import type { ContentBlock, Exam, Lab, Lesson, Module, Project, QuizQuestion } from "@/types";
 
 export interface Bilingual {
   es: string;
@@ -94,8 +94,14 @@ export function lessonFromSpec(level: number, order: number, spec: LessonSpec): 
   };
 }
 
+function firstCommand(lesson: Lesson): string {
+  const code = lesson.contentBlocks.find((block) => block.type === "CODE");
+  const line = code?.content.es.text?.split("\n").map((item) => item.trim()).find(Boolean);
+  return line ?? "pwd";
+}
+
 export function labsForCourse(level: number, lessons: Lesson[]): Lab[] {
-  return lessons.slice(0, 2).map((lesson, index) => ({
+  return lessons.slice(0, 4).map((lesson, index) => ({
     id: `lab-${level}-${index + 1}`,
     moduleId: `level-${level}`,
     slug: `lab-${lesson.slug}`,
@@ -142,24 +148,33 @@ export function labsForCourse(level: number, lessons: Lesson[]): Lab[] {
       es: `Completa los pasos de «${lesson.title.es}» y conserva el comando que funcionó.`,
       en: `Finish the steps for "${lesson.title.en}" and keep the command that worked.`,
     },
-    validationCriteria: [],
-    difficulty: "BEGINNER",
+    validationCriteria: [
+      {
+        type: "command_output",
+        check: firstCommand(lesson),
+        expected: "El comando termina sin error",
+      },
+      {
+        type: "custom",
+        check: "Provoca el fallo que advierte la lección y vuelve al estado anterior",
+        expected: "Puedes explicar la causa en una frase",
+      },
+    ],
+    difficulty: level >= 10 ? "ADVANCED" : level >= 5 ? "INTERMEDIATE" : "BEGINNER",
     estimatedTime: 20,
     order: index + 1,
   }));
 }
 
 export function examForCourse(level: number, lessons: Lesson[]): Exam {
-  const questions = lessons.slice(0, 10).flatMap((lesson) => {
-    const first = lesson.quiz?.questions[0];
-    if (!first) return [];
-    return [{
-      ...first,
-      id: `exam-${lesson.id}-1`,
-      difficulty: "BEGINNER" as const,
+  const questions = lessons.flatMap((lesson) =>
+    (lesson.quiz?.questions ?? []).map((question, index) => ({
+      ...question,
+      id: `exam-${lesson.id}-${index + 1}`,
+      difficulty: index >= 2 ? "INTERMEDIATE" as const : "BEGINNER" as const,
       category: lesson.slug,
-    }];
-  });
+    })),
+  ).slice(0, 20);
 
   return {
     id: `exam-level-${level}`,
@@ -169,14 +184,74 @@ export function examForCourse(level: number, lessons: Lesson[]): Exam {
       en: `Level ${level} exam`,
     },
     description: {
-      es: "Preguntas de las lecciones de este nivel. Necesitas 80% para aprobar.",
-      en: "Questions from this level's lessons. You need 80% to pass.",
+      es: "Hasta 20 preguntas de las lecciones, incluidas situaciones de fallo. Necesitas 80% para aprobar.",
+      en: "Up to 20 questions from the lessons, including failure scenarios. You need 80% to pass.",
     },
     questions,
     timeLimit: null,
     passingScore: 80,
     maxAttempts: null,
     shuffleQuestions: true,
+  };
+}
+
+export function projectForCourse(level: number, lessons: Lesson[]): Project {
+  const focus = lessons.slice(0, 4);
+  return {
+    id: `project-level-${level}`,
+    moduleId: `level-${level}`,
+    title: {
+      es: `Proyecto del nivel ${level}`,
+      en: `Level ${level} project`,
+    },
+    description: {
+      es: "Entrega un resultado que puedas romper y restaurar. El proyecto no cuenta si solo leíste las lecciones.",
+      en: "Deliver a result you can break and restore. The project does not count if you only read the lessons.",
+    },
+    objectives: {
+      es: focus.map((lesson) => `Aplicar «${lesson.title.es}» en un caso que falle si omites un paso`),
+      en: focus.map((lesson) => `Apply "${lesson.title.en}" in a case that fails if you skip a step`),
+    },
+    requirements: {
+      es: [
+        "Usa la terminal de tu máquina, no un editor de la consola del navegador",
+        "Guarda los comandos que funcionaron y el error que provocaste a propósito",
+        "No dejes secretos, chmod 777 ni un borrado amplio en el entregable",
+      ],
+      en: [
+        "Use your machine's terminal, not a browser console editor",
+        "Keep the commands that worked and the error you caused on purpose",
+        "Leave no secrets, chmod 777, or a wide delete in the deliverable",
+      ],
+    },
+    deliverables: {
+      es: [
+        "Un directorio o manifiesto con el resultado",
+        "Una nota de 10 líneas: qué rompiste, qué decía el error y cómo volviste atrás",
+      ],
+      en: [
+        "A directory or manifest with the result",
+        "A 10-line note: what you broke, what the error said, and how you rolled back",
+      ],
+    },
+    rubric: {
+      es: [
+        { criterion: "Resultado", description: "El caso de las lecciones queda funcionando", points: 40 },
+        { criterion: "Fallo", description: "Hay un error real y la corrección", points: 30 },
+        { criterion: "Cuidado", description: "Sin secretos ni permisos abiertos de más", points: 30 },
+      ],
+      en: [
+        { criterion: "Result", description: "The lesson scenario works", points: 40 },
+        { criterion: "Failure", description: "There is a real error and the fix", points: 30 },
+        { criterion: "Care", description: "No secrets and no overly open permissions", points: 30 },
+      ],
+    },
+    resources: {
+      es: ["Terminal de la app", "Lecciones de este nivel"],
+      en: ["The app terminal", "This level's lessons"],
+    },
+    difficulty: level >= 12 ? "ADVANCED" : level >= 5 ? "INTERMEDIATE" : "BEGINNER",
+    estimatedTime: 3 + Math.floor(level / 4),
   };
 }
 
@@ -191,6 +266,7 @@ export function courseFromSpec(spec: CourseSpec): BuiltCourse {
   const lessons = spec.lessons.map((lesson, index) => lessonFromSpec(spec.level, index + 1, lesson));
   const labs = labsForCourse(spec.level, lessons);
   const exam = examForCourse(spec.level, lessons);
+  const project = projectForCourse(spec.level, lessons);
   const module: Module = {
     id: `level-${spec.level}`,
     courseId: "linux-academy",
@@ -203,7 +279,7 @@ export function courseFromSpec(spec: CourseSpec): BuiltCourse {
     lessons,
     labs,
     exam,
-    project: null,
+    project,
     passingScore: 80,
     prerequisites: spec.level === 0 ? [] : [`level-${spec.level - 1}`],
     skills: spec.skills,

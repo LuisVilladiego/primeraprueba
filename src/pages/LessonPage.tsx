@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useProgressStore } from "@/stores/progressStore";
@@ -18,7 +19,36 @@ import {
   Code,
   BookOpen
 } from "lucide-react";
-import type { ContentBlock } from "@/types";
+import type { ContentBlock, DiagramNode } from "@/types";
+import { LessonChecks } from "./LessonChecks";
+
+function youtubeId(url: string): string | null {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname === "youtu.be") return parsed.pathname.slice(1) || null;
+    return parsed.searchParams.get("v");
+  } catch {
+    return null;
+  }
+}
+
+function DiagramNodes({ nodes }: { nodes: DiagramNode[] }) {
+  return (
+    <ul className="mt-2 space-y-2">
+      {nodes.map((node) => (
+        <li key={node.id} className="rounded-md bg-white/70 px-3 py-2 dark:bg-zinc-900/40">
+          <p className="font-medium">{node.label}</p>
+          {node.description && <p className="text-sm text-zinc-600 dark:text-zinc-400">{node.description}</p>}
+          {node.children && node.children.length > 0 && (
+            <div className="ml-4 mt-2 border-l border-zinc-300 pl-3 dark:border-zinc-600">
+              <DiagramNodes nodes={node.children} />
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 function ContentBlockRenderer({ block, locale }: { block: ContentBlock; locale: string }) {
   const content = block.content[locale as "es" | "en"];
@@ -31,6 +61,53 @@ function ContentBlockRenderer({ block, locale }: { block: ContentBlock; locale: 
   };
 
   const style = blockStyles[block.type];
+
+  if (block.type === "VIDEO" && content.videoUrl) {
+    const id = youtubeId(content.videoUrl);
+    return (
+      <div>
+        {content.title && <h2 className="mb-2 text-xl font-semibold">{content.title}</h2>}
+        {content.text && <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-400">{content.text}</p>}
+        {id ? (
+          <div className="aspect-video overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
+            <iframe
+              className="h-full w-full"
+              src={`https://www.youtube-nocookie.com/embed/${id}`}
+              title={content.title || "YouTube"}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        ) : (
+          <a className="text-blue-600 underline" href={content.videoUrl}>{content.videoUrl}</a>
+        )}
+      </div>
+    );
+  }
+
+  if (block.type === "DIAGRAM" && content.diagramData) {
+    return (
+      <div className="rounded-lg border border-indigo-200 bg-indigo-50 p-4 dark:border-indigo-800 dark:bg-indigo-900/20">
+        {content.title && <h3 className="font-semibold">{content.title}</h3>}
+        <DiagramNodes nodes={content.diagramData.nodes} />
+      </div>
+    );
+  }
+
+  if (content.terminalCommands && content.terminalCommands.length > 0) {
+    return (
+      <div className="space-y-3">
+        {content.title && <h3 className="font-semibold">{content.title}</h3>}
+        {content.terminalCommands.map((command) => (
+          <div key={command.command} className="rounded-lg bg-zinc-950 p-3 text-sm text-zinc-100">
+            <p className="font-mono text-green-300">$ {command.command}</p>
+            <pre className="mt-2 whitespace-pre-wrap text-zinc-300">{command.output}</pre>
+            {command.explanation && <p className="mt-2 text-zinc-400">{command.explanation}</p>}
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   if (block.type === "TEXT") {
     return (
@@ -71,7 +148,25 @@ export function LessonPage() {
   const { markAsCompleted, markAsStarted, getProgress } = useProgressStore();
   const { updateStats, incrementXp, stats } = useUserStore();
 
+  const [quizPassed, setQuizPassed] = useState(false);
+  const [quizFinished, setQuizFinished] = useState(false);
+  const [quizAttempt, setQuizAttempt] = useState(0);
   const course = useActiveCourse();
+  const lesson = course?.contentBySlug[slug || ""];
+  const currentIndex = course && lesson ? course.lessons.findIndex((item) => item.slug === slug) : -1;
+  const prevLesson = course && currentIndex > 0 ? course.lessons[currentIndex - 1] : null;
+  const nextLesson = course && currentIndex >= 0 && currentIndex < course.lessons.length - 1
+    ? course.lessons[currentIndex + 1]
+    : null;
+
+  useEffect(() => {
+    if (!lesson) return;
+    const open = !lesson.quiz || lesson.quiz.questions.length === 0;
+    setQuizPassed(open);
+    setQuizFinished(open);
+    setQuizAttempt(0);
+  }, [lesson?.id, lesson?.quiz?.questions.length]);
+
   if (!course) {
     return (
       <div className="flex h-[400px] items-center justify-center">
@@ -81,12 +176,6 @@ export function LessonPage() {
       </div>
     );
   }
-  const lesson = course.contentBySlug[slug || ""];
-  const currentIndex = course.lessons.findIndex((item) => item.slug === slug);
-  const prevLesson = currentIndex > 0 ? course.lessons[currentIndex - 1] : null;
-  const nextLesson = currentIndex >= 0 && currentIndex < course.lessons.length - 1
-    ? course.lessons[currentIndex + 1]
-    : null;
 
   if (!lesson) {
     return (
@@ -180,9 +269,26 @@ export function LessonPage() {
           ))}
         </div>
 
+        <LessonChecks
+          key={quizAttempt}
+          exercises={lesson.exercises}
+          questions={lesson.quiz?.questions ?? []}
+          passingScore={lesson.quiz?.passingScore ?? 70}
+          locale={locale === "en" ? "en" : "es"}
+          onQuizPassed={(passed) => {
+            setQuizPassed(passed);
+            setQuizFinished(true);
+          }}
+        />
+
         {!isCompleted && (
-          <div className="mt-8 flex justify-center">
-            <Button variant="primary" size="lg" onClick={handleComplete}>
+          <div className="mt-8 flex flex-col items-center gap-3">
+            {quizFinished && !quizPassed && (
+              <Button variant="outline" onClick={() => setQuizAttempt((attempt) => attempt + 1)}>
+                {locale === "es" ? "Reintentar el quiz" : "Retry the quiz"}
+              </Button>
+            )}
+            <Button variant="primary" size="lg" onClick={handleComplete} disabled={!quizPassed}>
               <CheckCircle2 className="mr-2 h-5 w-5" />
               {locale === "es" ? "Marcar como completada" : "Mark as completed"}
             </Button>

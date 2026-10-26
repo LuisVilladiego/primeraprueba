@@ -9962,6 +9962,675 @@
           ]
         }
       ]
+    },
+    {
+      "level": 16,
+      "icon": "🛰️",
+      "title": {
+        "es": "Nivel experto",
+        "en": "Expert level"
+      },
+      "description": {
+        "es": "Observabilidad, secretos y la operación de un sistema que ya está en producción.",
+        "en": "Observability, secrets, and operating a system that is already in production."
+      },
+      "skills": [
+        "metrics",
+        "traces",
+        "slo",
+        "secrets",
+        "delivery"
+      ],
+      "lessons": [
+        {
+          "slug": "metrics-logs-traces",
+          "title": {
+            "es": "Métricas, logs y trazas",
+            "en": "Metrics, logs, and traces"
+          },
+          "description": {
+            "es": "Tres señales distintas. Ninguna reemplaza a las otras.",
+            "en": "Three different signals. None replaces the others."
+          },
+          "why": {
+            "es": "Un panel bonito no dice qué petición falló. Un log sin número no dice si el fallo es uno o mil por minuto.",
+            "en": "A pretty dashboard does not say which request failed. A log without a number does not say whether the failure is one or a thousand per minute."
+          },
+          "concept": {
+            "es": "La métrica es un número en el tiempo (tasa de 5xx, latencia, CPU). El log es un suceso con un id. La traza sigue una petición a través de varios servicios. El mismo request id debe aparecer en los tres cuando investigas un caso.",
+            "en": "A metric is a number over time (5xx rate, latency, CPU). A log is an event with an id. A trace follows one request across services. The same request id should show up in all three when you investigate a case."
+          },
+          "commands": {
+            "es": "curl -s localhost:9090/api/v1/query?query=up\njournalctl -u app -n 20 --no-pager",
+            "en": "curl -s localhost:9090/api/v1/query?query=up\njournalctl -u app -n 20 --no-pager"
+          },
+          "practice": {
+            "es": "1. Nombra una métrica, un log y una traza de un servicio que conozcas.\n2. Comprueba que los tres pueden compartir un id de petición.\n3. Si solo tienes logs, anota qué número te falta.",
+            "en": "1. Name a metric, a log, and a trace for a service you know.\n2. Check that all three can share a request id.\n3. If you only have logs, write down which number you are missing."
+          },
+          "quiz": [
+            {
+              "question": {
+                "es": "Una métrica responde…",
+                "en": "A metric answers…"
+              },
+              "options": {
+                "es": [
+                  "Qué dijo una petición concreta",
+                  "Cuánto y con qué frecuencia",
+                  "El contenido del secreto",
+                  "El diff de git"
+                ],
+                "en": [
+                  "What one request said",
+                  "How much, and how often",
+                  "The secret's contents",
+                  "The git diff"
+                ]
+              },
+              "correct": 1,
+              "explanation": {
+                "es": "El caso concreto está en el log o en la traza. La métrica agrega.",
+                "en": "The concrete case is in the log or the trace. The metric aggregates."
+              }
+            },
+            {
+              "question": {
+                "es": "El request id sirve para…",
+                "en": "The request id is for…"
+              },
+              "options": {
+                "es": [
+                  "Abrir el puerto 80",
+                  "Juntar la métrica, el log y la traza del mismo caso",
+                  "Rotar la contraseña",
+                  "Borrar el panel"
+                ],
+                "en": [
+                  "Opening port 80",
+                  "Joining the metric, log, and trace of the same case",
+                  "Rotating the password",
+                  "Deleting the dashboard"
+                ]
+              },
+              "correct": 1,
+              "explanation": {
+                "es": "Sin un id común investigas tres sistemas que no se hablan.",
+                "en": "Without a shared id you investigate three systems that do not talk."
+              }
+            }
+          ]
+        },
+        {
+          "slug": "prometheus-and-grafana",
+          "title": {
+            "es": "Prometheus y Grafana",
+            "en": "Prometheus and Grafana"
+          },
+          "description": {
+            "es": "Prometheus guarda series. Grafana las muestra. La alerta no vive en el dibujo.",
+            "en": "Prometheus stores series. Grafana shows them. The alert does not live in the drawing."
+          },
+          "why": {
+            "es": "Un panel que nadie mira no despierta a nadie. La alerta compara una serie con un umbral y avisa.",
+            "en": "A dashboard nobody watches wakes nobody. The alert compares a series with a threshold and notifies."
+          },
+          "concept": {
+            "es": "Prometheus raspa endpoints /metrics. Una serie tiene nombre y etiquetas (method, status). rate() mira el incremento, no el contador crudo. Grafana consulta Prometheus. La regla de alerta vive en Prometheus o en Alertmanager, no en un gráfico.",
+            "en": "Prometheus scrapes /metrics endpoints. A series has a name and labels (method, status). rate() looks at the increase, not the raw counter. Grafana queries Prometheus. The alert rule lives in Prometheus or Alertmanager, not in a chart."
+          },
+          "commands": {
+            "es": "curl -s localhost:9090/metrics | head\nup{job=\"app\"}",
+            "en": "curl -s localhost:9090/metrics | head\nup{job=\"app\"}"
+          },
+          "practice": {
+            "es": "1. Abre /metrics de un proceso de práctica.\n2. Distingue un contador de un gauge.\n3. Escribe en una frase qué condición debería despertarte.",
+            "en": "1. Open /metrics of a practice process.\n2. Tell a counter apart from a gauge.\n3. Write one sentence for the condition that should wake you."
+          },
+          "quiz": [
+            {
+              "question": {
+                "es": "rate() se usa porque…",
+                "en": "rate() is used because…"
+              },
+              "options": {
+                "es": [
+                  "Un contador solo sube y el número crudo no es la velocidad",
+                  "Grafana no sabe restar",
+                  "Sustituye al log",
+                  "Cifra la serie"
+                ],
+                "en": [
+                  "A counter only goes up and the raw number is not the speed",
+                  "Grafana cannot subtract",
+                  "It replaces the log",
+                  "It encrypts the series"
+                ]
+              },
+              "correct": 1,
+              "explanation": {
+                "es": "El contador acumula desde el arranque. La tasa es lo que comparas.",
+                "en": "The counter accumulates since start. The rate is what you compare."
+              }
+            },
+            {
+              "question": {
+                "es": "La alerta debe vivir…",
+                "en": "The alert should live…"
+              },
+              "options": {
+                "es": [
+                  "Solo como un color en Grafana",
+                  "En una regla que avisa aunque nadie tenga el panel abierto",
+                  "En el README",
+                  "En el access_log"
+                ],
+                "en": [
+                  "Only as a color in Grafana",
+                  "In a rule that notifies even if nobody has the dashboard open",
+                  "In the README",
+                  "In the access_log"
+                ]
+              },
+              "correct": 1,
+              "explanation": {
+                "es": "El panel es para mirar. La regla es para despertar.",
+                "en": "The dashboard is for looking. The rule is for waking someone."
+              }
+            }
+          ],
+          "warning": {
+            "es": "No alertes cada subida de un contador. Alerta la tasa o el síntoma que un humano puede atender.",
+            "en": "Do not alert on every counter increase. Alert on the rate or the symptom a human can act on."
+          }
+        },
+        {
+          "slug": "slos-and-error-budgets",
+          "title": {
+            "es": "SLO y presupuesto de error",
+            "en": "SLOs and error budgets"
+          },
+          "description": {
+            "es": "Un objetivo medible y el fallo que todavía puedes permitirte.",
+            "en": "A measurable target and the failure you can still afford."
+          },
+          "why": {
+            "es": "«Que esté rápido» no se opera. «99% de las peticiones bajo 300 ms en 30 días» sí.",
+            "en": "\"Make it fast\" cannot be operated. \"99% of requests under 300 ms over 30 days\" can."
+          },
+          "concept": {
+            "es": "El SLI es el número (latencia, disponibilidad, frescura). El SLO es el objetivo. El presupuesto de error es lo que falta para incumplir el SLO. Si el presupuesto se gasta, se congela el riesgo: no más deploys arriesgados hasta recuperar margen.",
+            "en": "The SLI is the number (latency, availability, freshness). The SLO is the target. The error budget is what is left before you miss the SLO. If the budget is spent, you freeze risk: no more risky deploys until you earn margin back."
+          },
+          "commands": {
+            "es": "SLI: proporción de peticiones < 300 ms\nSLO: 99% en 30 días\nPresupuesto: 1% de peticiones lentas",
+            "en": "SLI: share of requests < 300 ms\nSLO: 99% over 30 days\nBudget: 1% slow requests"
+          },
+          "practice": {
+            "es": "1. Elige un SLI de un servicio real o de práctica.\n2. Escribe el SLO con ventana de tiempo.\n3. Calcula qué porcentaje de fallo todavía cabe.",
+            "en": "1. Pick an SLI for a real or practice service.\n2. Write the SLO with a time window.\n3. Compute what failure percentage still fits."
+          },
+          "quiz": [
+            {
+              "question": {
+                "es": "El SLO es…",
+                "en": "The SLO is…"
+              },
+              "options": {
+                "es": [
+                  "El panel",
+                  "El objetivo numérico del SLI",
+                  "El secreto de la app",
+                  "El número de pods"
+                ],
+                "en": [
+                  "The dashboard",
+                  "The numeric target for the SLI",
+                  "The app secret",
+                  "The pod count"
+                ]
+              },
+              "correct": 1,
+              "explanation": {
+                "es": "Sin objetivo, la alerta es un gusto personal.",
+                "en": "Without a target, the alert is a personal preference."
+              }
+            },
+            {
+              "question": {
+                "es": "Presupuesto de error agotado implica…",
+                "en": "A spent error budget means…"
+              },
+              "options": {
+                "es": [
+                  "Desplegar más rápido",
+                  "Frenar cambios arriesgados hasta recuperar el margen",
+                  "Borrar las métricas",
+                  "Abrir el firewall"
+                ],
+                "en": [
+                  "Deploy faster",
+                  "Slow risky changes until the margin returns",
+                  "Delete the metrics",
+                  "Open the firewall"
+                ]
+              },
+              "correct": 1,
+              "explanation": {
+                "es": "El presupuesto es el permiso para cambiar. Si se acabó, primero se repara.",
+                "en": "The budget is permission to change. If it is gone, you repair first."
+              }
+            }
+          ]
+        },
+        {
+          "slug": "alerts-and-oncall",
+          "title": {
+            "es": "Alertas y guardia",
+            "en": "Alerts and on-call"
+          },
+          "description": {
+            "es": "Cada alerta tiene un síntoma, un dueño y una primera acción.",
+            "en": "Every alert has a symptom, an owner, and a first action."
+          },
+          "why": {
+            "es": "Diez alertas por hora se ignoran. Una alerta que no dice qué mirar despierta a alguien para nada.",
+            "en": "Ten alerts an hour get ignored. An alert that does not say what to look at wakes someone for nothing."
+          },
+          "concept": {
+            "es": "La alerta describe el síntoma (el SLO se quema, el disco pasa el 85%, el proceso no responde). El runbook dice el primer comando. Hay un humano de guardia y un relevo. Si la alerta suena y nadie actúa, se borra o se reescribe. No se silencia para siempre sin una fecha.",
+            "en": "The alert describes the symptom (the SLO is burning, disk passes 85%, the process does not answer). The runbook says the first command. A human is on call, with a handoff. If the alert rings and nobody acts, delete it or rewrite it. Do not silence it forever without a date."
+          },
+          "commands": {
+            "es": "Alerta: 5xx > 1% durante 5 min\nRunbook: revisar el deploy último y la tasa, no entrar por SSH a mirar al azar",
+            "en": "Alert: 5xx > 1% for 5 min\nRunbook: check the latest deploy and the rate, do not SSH in and look at random"
+          },
+          "practice": {
+            "es": "1. Escribe una alerta con el síntoma en la primera línea.\n2. Añade el primer comando del runbook.\n3. Borra del papel cualquier alerta que no tendría dueño.",
+            "en": "1. Write an alert with the symptom on the first line.\n2. Add the runbook's first command.\n3. Cross out any alert that would have no owner."
+          },
+          "quiz": [
+            {
+              "question": {
+                "es": "Una alerta útil empieza por…",
+                "en": "A useful alert starts with…"
+              },
+              "options": {
+                "es": [
+                  "El nombre del servidor",
+                  "El síntoma que alguien debe atender",
+                  "El logo del panel",
+                  "La culpa del último commit"
+                ],
+                "en": [
+                  "The server name",
+                  "The symptom someone must handle",
+                  "The dashboard logo",
+                  "Blame for the last commit"
+                ]
+              },
+              "correct": 1,
+              "explanation": {
+                "es": "El nombre del host se busca después. Primero se sabe qué duele.",
+                "en": "The host name is looked up later. First you know what hurts."
+              }
+            },
+            {
+              "question": {
+                "es": "Silenciar una alerta para siempre…",
+                "en": "Silencing an alert forever…"
+              },
+              "options": {
+                "es": [
+                  "Es el cierre normal",
+                  "Esconde un síntoma. Si se silencia, tiene fecha de revisión",
+                  "Mejora el SLO",
+                  "Rota el secreto"
+                ],
+                "en": [
+                  "Is the normal close",
+                  "Hides a symptom. If you silence it, set a review date",
+                  "Improves the SLO",
+                  "Rotates the secret"
+                ]
+              },
+              "correct": 1,
+              "explanation": {
+                "es": "El silencio permanente es cómo el incidente del mes que viene pasa inadvertido.",
+                "en": "Permanent silence is how next month's incident goes unnoticed."
+              }
+            }
+          ]
+        },
+        {
+          "slug": "secrets-managers",
+          "title": {
+            "es": "Gestores de secretos",
+            "en": "Secrets managers"
+          },
+          "description": {
+            "es": "El valor vive en un gestor. La app lo pide al arrancar. El git no lo ve.",
+            "en": "The value lives in a manager. The app asks for it at start. Git never sees it."
+          },
+          "why": {
+            "es": "Un .env en el repositorio ya es un incidente, aunque el archivo esté en el último commit borrado.",
+            "en": "A .env in the repository is already an incident, even if a later commit deletes the file."
+          },
+          "concept": {
+            "es": "Vault, el gestor del cloud (Secrets Manager, SSM) o SOPS cifrado con una clave que no está en el repo entregan el secreto en memoria. Kubernetes puede montarlo desde un proveedor externo. El proceso lo lee al arrancar. Los logs no lo imprimen. Quien despliega no necesita pegar el valor en el chat.",
+            "en": "Vault, the cloud manager (Secrets Manager, SSM), or SOPS encrypted with a key that is not in the repo deliver the secret in memory. Kubernetes can mount it from an external provider. The process reads it at start. Logs do not print it. Whoever deploys does not paste the value into chat."
+          },
+          "commands": {
+            "es": "sops --decrypt app.enc.yaml\n# el YAML cifrado sí puede estar en git; la clave, no",
+            "en": "sops --decrypt app.enc.yaml\n# the encrypted YAML may live in git; the key may not"
+          },
+          "practice": {
+            "es": "1. Elige un secreto de práctica.\n2. Confirma que el git no contiene el valor en claro (git log -S).\n3. Describe de dónde lo leería el proceso al arrancar.",
+            "en": "1. Pick a practice secret.\n2. Confirm git does not contain the clear value (git log -S).\n3. Describe where the process would read it at start."
+          },
+          "quiz": [
+            {
+              "question": {
+                "es": "SOPS permite…",
+                "en": "SOPS lets you…"
+              },
+              "options": {
+                "es": [
+                  "Guardar el secreto en claro porque el archivo se llama .enc",
+                  "Commitear el archivo cifrado y descifrarlo con una clave externa",
+                  "Apagar las alertas",
+                  "Firmar la imagen de Docker"
+                ],
+                "en": [
+                  "Store the secret in clear text because the file is named .enc",
+                  "Commit the encrypted file and decrypt it with an external key",
+                  "Turn alerts off",
+                  "Sign the Docker image"
+                ]
+              },
+              "correct": 1,
+              "explanation": {
+                "es": "El cifrado es lo que viaja. La clave no entra al repositorio.",
+                "en": "The ciphertext is what travels. The key does not enter the repository."
+              }
+            },
+            {
+              "question": {
+                "es": "La app debería recibir el secreto…",
+                "en": "The app should receive the secret…"
+              },
+              "options": {
+                "es": [
+                  "En el mensaje del commit",
+                  "En memoria, al arrancar, desde el gestor",
+                  "En el access_log",
+                  "En la AMI"
+                ],
+                "en": [
+                  "In the commit message",
+                  "In memory, at start, from the manager",
+                  "In the access_log",
+                  "In the AMI"
+                ]
+              },
+              "correct": 1,
+              "explanation": {
+                "es": "Así rotar el valor no exige reescribir la historia de git.",
+                "en": "That way rotating the value does not require rewriting git history."
+              }
+            }
+          ],
+          "warning": {
+            "es": "Si el valor ya estuvo en un commit, rótalo. Borrar el archivo no lo saca de los clones antiguos.",
+            "en": "If the value was ever in a commit, rotate it. Deleting the file does not remove it from old clones."
+          }
+        },
+        {
+          "slug": "leak-and-rotation",
+          "title": {
+            "es": "Fuga y rotación",
+            "en": "Leaks and rotation"
+          },
+          "description": {
+            "es": "Un secreto filtrado se invalida. No se «esconde» otra vez.",
+            "en": "A leaked secret is invalidated. It is not hidden again."
+          },
+          "why": {
+            "es": "Quien copió el token sigue pudiendo usarlo hasta que el emisor lo rechaza.",
+            "en": "Whoever copied the token can keep using it until the issuer rejects it."
+          },
+          "concept": {
+            "es": "Rotar es emitir un valor nuevo y revocar el viejo. Se hace con plazo en calma, y de inmediato si hubo fuga: chat, log, imagen, estado de Terraform, issue público. Después se busca el valor viejo en git y en los registros. El runbook de rotación se ensaya antes de necesitarlo.",
+            "en": "Rotation issues a new value and revokes the old one. You do it on a schedule when calm, and immediately after a leak: chat, log, image, Terraform state, a public issue. Then you search for the old value in git and in registries. The rotation runbook is rehearsed before you need it."
+          },
+          "commands": {
+            "es": "git log -S 'VALOR' --all\n# revocar en el emisor, no solo borrar el archivo",
+            "en": "git log -S 'VALUE' --all\n# revoke at the issuer, do not only delete the file"
+          },
+          "practice": {
+            "es": "1. Escribe los pasos de rotación de un token de práctica.\n2. Incluye quién avisa y dónde se busca el valor viejo.\n3. No uses un token real en el ejercicio escrito.",
+            "en": "1. Write the rotation steps for a practice token.\n2. Include who gets told and where you search for the old value.\n3. Do not use a real token in the written exercise."
+          },
+          "quiz": [
+            {
+              "question": {
+                "es": "Rotar significa…",
+                "en": "Rotation means…"
+              },
+              "options": {
+                "es": [
+                  "Borrar el archivo y dejar el token válido",
+                  "Emitir un valor nuevo y revocar el anterior en el emisor",
+                  "Cambiar el nombre de la variable",
+                  "Hacer el bucket público"
+                ],
+                "en": [
+                  "Deleting the file and leaving the token valid",
+                  "Issuing a new value and revoking the old one at the issuer",
+                  "Renaming the variable",
+                  "Making the bucket public"
+                ]
+              },
+              "correct": 1,
+              "explanation": {
+                "es": "Mientras el emisor acepte el valor viejo, la fuga sigue viva.",
+                "en": "As long as the issuer accepts the old value, the leak is still alive."
+              }
+            },
+            {
+              "question": {
+                "es": "git log -S sirve para…",
+                "en": "git log -S is for…"
+              },
+              "options": {
+                "es": [
+                  "Cifrar el remoto",
+                  "Encontrar commits que añadieron o quitaron esa cadena",
+                  "Rotar solo",
+                  "Crear el SLO"
+                ],
+                "en": [
+                  "Encrypting the remote",
+                  "Finding commits that added or removed that string",
+                  "Rotating by itself",
+                  "Creating the SLO"
+                ]
+              },
+              "correct": 1,
+              "explanation": {
+                "es": "Así sabes si el valor llegó a la historia.",
+                "en": "That is how you know whether the value reached history."
+              }
+            }
+          ]
+        },
+        {
+          "slug": "progressive-delivery",
+          "title": {
+            "es": "Entrega progresiva",
+            "en": "Progressive delivery"
+          },
+          "description": {
+            "es": "La versión nueva recibe una parte del tráfico y se puede retirar.",
+            "en": "The new version receives part of the traffic and can be pulled back."
+          },
+          "why": {
+            "es": "Cambiar el 100% de los usuarios de un golpe convierte un bug en una caída completa.",
+            "en": "Switching 100% of users at once turns a bug into a full outage."
+          },
+          "concept": {
+            "es": "Canary manda un porcentaje a la versión nueva y mira el SLI. Si la tasa de error sube, se vuelve al digest anterior. Feature flags separan el deploy del lanzamiento: el código llega apagado y se enciende por grupo. Blue/green mantiene la versión vieja caliente. El flag también es un cambio y se limpia cuando ya no decide nada.",
+            "en": "A canary sends a percentage to the new version and watches the SLI. If the error rate rises, you return to the previous digest. Feature flags separate deploy from launch: the code arrives off and is turned on for a group. Blue/green keeps the old version warm. A flag is also a change and is removed when it no longer decides anything."
+          },
+          "commands": {
+            "es": "1% del tráfico -> mirar 5xx 10 min -> 10% -> 100%\nsi el SLI empeora: volver al digest anterior",
+            "en": "1% of traffic -> watch 5xx for 10 min -> 10% -> 100%\nif the SLI worsens: return to the previous digest"
+          },
+          "practice": {
+            "es": "1. Dibuja el porcentaje de un canary para un servicio de práctica.\n2. Escribe la condición que aborta.\n3. Nombra el artefacto al que volverías.",
+            "en": "1. Sketch the canary percentages for a practice service.\n2. Write the condition that aborts it.\n3. Name the artifact you would return to."
+          },
+          "quiz": [
+            {
+              "question": {
+                "es": "Un canary mira…",
+                "en": "A canary watches…"
+              },
+              "options": {
+                "es": [
+                  "Solo que el proceso arrancó",
+                  "El SLI de la porción nueva antes de soltar el resto",
+                  "El tamaño del repositorio",
+                  "La clave SSH"
+                ],
+                "en": [
+                  "Only that the process started",
+                  "The new slice's SLI before releasing the rest",
+                  "The repository size",
+                  "The SSH key"
+                ]
+              },
+              "correct": 1,
+              "explanation": {
+                "es": "Arrancar no es servir bien. El número lo dice.",
+                "en": "Starting is not serving well. The number says so."
+              }
+            },
+            {
+              "question": {
+                "es": "Un feature flag…",
+                "en": "A feature flag…"
+              },
+              "options": {
+                "es": [
+                  "Evita tener que desplegar código",
+                  "Separa la llegada del código de encenderlo para los usuarios",
+                  "Sustituye al examen de CI",
+                  "Cifra la base"
+                ],
+                "en": [
+                  "Avoids deploying code",
+                  "Separates code arriving from turning it on for users",
+                  "Replaces the CI test",
+                  "Encrypts the database"
+                ]
+              },
+              "correct": 1,
+              "explanation": {
+                "es": "El deploy puede ser aburrido. El encendido es la decisión.",
+                "en": "The deploy can be boring. Turning it on is the decision."
+              }
+            }
+          ],
+          "warning": {
+            "es": "Un flag olvidado es código muerto con un camino que ya no pruebas. Bórralo cuando la decisión terminó.",
+            "en": "A forgotten flag is dead code with a path you no longer test. Delete it when the decision is over."
+          }
+        },
+        {
+          "slug": "game-days",
+          "title": {
+            "es": "Ensayo de incidentes",
+            "en": "Game days"
+          },
+          "description": {
+            "es": "Rompes el sistema a propósito, con hora y con vuelta atrás, antes de que lo rompa otro.",
+            "en": "You break the system on purpose, with a time and a rollback, before someone else breaks it."
+          },
+          "why": {
+            "es": "El runbook que nunca se ejecutó falla en la primera línea el día de la caída.",
+            "en": "The runbook that was never run fails on the first line on the day of the outage."
+          },
+          "concept": {
+            "es": "Un game day tiene hipótesis («si muere una zona, el SLO aguanta»), una acción segura de parar, un observador y una nota. Se mide el tiempo hasta detectar y hasta recuperar. Al final queda una acción con dueño: una alerta, un test o un permiso que faltaba. No se ensaya en producción el primer borrado de una base.",
+            "en": "A game day has a hypothesis (\"if a zone dies, the SLO holds\"), a safe stop, an observer, and a note. You measure time to detect and time to recover. Afterwards one action remains, with an owner: an alert, a test, or a permission that was missing. You do not rehearse the first database delete in production."
+          },
+          "commands": {
+            "es": "Hipótesis: al apagar un réplica, las peticiones siguen < 300 ms\nParada: volver a encender la réplica\nNota: tiempo de detección y de recuperación",
+            "en": "Hypothesis: with one replica off, requests stay < 300 ms\nStop: turn the replica back on\nNote: time to detect and to recover"
+          },
+          "practice": {
+            "es": "1. Escribe una hipótesis pequeña para un servicio de práctica.\n2. Define cómo paras el ensayo.\n3. Deja una sola acción con dueño al terminar.",
+            "en": "1. Write a small hypothesis for a practice service.\n2. Define how you stop the drill.\n3. Leave a single action with an owner when you finish."
+          },
+          "quiz": [
+            {
+              "question": {
+                "es": "Un game day sirve para…",
+                "en": "A game day is for…"
+              },
+              "options": {
+                "es": [
+                  "Encontrar al culpable",
+                  "Medir si la detección y la recuperación funcionan antes del incidente real",
+                  "Saltar el SLO",
+                  "Publicar secretos"
+                ],
+                "en": [
+                  "Finding who to blame",
+                  "Measuring whether detection and recovery work before a real incident",
+                  "Skipping the SLO",
+                  "Publishing secrets"
+                ]
+              },
+              "correct": 1,
+              "explanation": {
+                "es": "El ensayo barato evita el aprendizaje durante la caída.",
+                "en": "The cheap drill avoids learning during the outage."
+              }
+            },
+            {
+              "question": {
+                "es": "La nota del ensayo debe dejar…",
+                "en": "The drill note should leave…"
+              },
+              "options": {
+                "es": [
+                  "Una lista de nombres",
+                  "Una acción con dueño que cambie el sistema",
+                  "El secreto usado",
+                  "El panel apagado"
+                ],
+                "en": [
+                  "A list of names",
+                  "An action with an owner that changes the system",
+                  "The secret that was used",
+                  "The dashboard turned off"
+                ]
+              },
+              "correct": 1,
+              "explanation": {
+                "es": "Sin ese cambio, el siguiente ensayo descubre lo mismo.",
+                "en": "Without that change, the next drill discovers the same thing."
+              }
+            }
+          ],
+          "warning": {
+            "es": "No hagas el primer ensayo destructivo en producción. Empieza en un entorno que puedas apagar.",
+            "en": "Do not run the first destructive drill in production. Start in an environment you can turn off."
+          }
+        }
+      ]
     }
   ]
 }

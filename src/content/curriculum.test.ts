@@ -83,13 +83,18 @@ describe("catálogo", () => {
   it("publica los niveles 0 a 15 con lecciones, labs y examen", () => {
     const courses = listCourses();
     expect(courses.map((course) => course.module.level)).toEqual(
-      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
     );
     for (const course of courses) {
       expect(course.lessons.length).toBeGreaterThan(0);
       expect(course.labs.length).toBeGreaterThan(0);
-      expect(course.exam.questions.length).toBeGreaterThan(0);
+      expect(course.exam.questions.length).toBeGreaterThanOrEqual(course.module.level === 0 ? 15 : 20);
       expect(course.exam.id).toBe(`exam-level-${course.module.level}`);
+      expect(course.module.project).toBeTruthy();
+      if (course.module.level > 0) {
+        expect(course.lessons[0].exercises.length).toBeGreaterThan(0);
+        expect(course.lessons[0].quiz?.questions.length).toBeGreaterThanOrEqual(4);
+      }
     }
   });
 
@@ -127,6 +132,11 @@ describe("catálogo", () => {
         const page = pages[lesson.slug];
         expect(page).toBeTruthy();
         expect(page.id).toBe(lesson.id);
+        if (course.module.level === 0) {
+          expect(page.contentBlocks.length).toBeGreaterThan(0);
+        } else {
+          expect(page.exercises.length).toBeGreaterThan(0);
+        }
         expect(page.contentBlocks.length).toBeGreaterThan(0);
         for (const block of page.contentBlocks) {
           expect(blockHasCopy(block.content.es), `${page.id} ${block.id} es`).toBe(true);

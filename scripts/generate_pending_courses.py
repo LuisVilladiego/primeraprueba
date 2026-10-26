@@ -233,10 +233,12 @@ courses.append(course(2, "⚙️", "Administración Linux", "Linux administratio
 from courses_rest import more_courses
 from courses_5_15 import extra_courses
 from courses_7_15 import rest_courses
+from courses_expert import expert_courses
 
 courses.extend(more_courses(lesson, q, course))
 courses.extend(extra_courses(lesson, q, course))
 courses.extend(rest_courses(lesson, q, course))
+courses.extend(expert_courses(lesson, q, course))
 out = Path(__file__).resolve().parents[1] / "src" / "content" / "curriculum" / "pending.json"
 out.parent.mkdir(parents=True, exist_ok=True)
 out.write_text(json.dumps({"courses": courses}, ensure_ascii=False, indent=2))

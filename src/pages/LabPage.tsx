@@ -143,6 +143,22 @@ export function LabPage() {
         </ol>
       </Card>
 
+      {lab.validationCriteria.length > 0 && (
+        <Card className="mt-6 p-6">
+          <h2 className="mb-3 text-lg font-semibold text-zinc-900 dark:text-white">
+            {locale === "es" ? "Se considera hecho cuando" : "It counts as done when"}
+          </h2>
+          <ul className="space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
+            {lab.validationCriteria.map((criterion) => (
+              <li key={criterion.check}>
+                <span className="font-mono text-xs text-zinc-500">{criterion.check}</span>
+                <span> — {criterion.expected}</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
+
       {/* Link to Terminal */}
       <Card className="mt-6 p-4">
         <div className="text-center">

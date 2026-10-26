@@ -13,7 +13,8 @@ import {
   Clock, 
   CheckCircle2, 
   ChevronRight,
-  ArrowLeft
+  ArrowLeft,
+  Hammer
 } from "lucide-react";
 import type { Exam, Lab, Lesson, Module } from "@/types";
 
@@ -154,6 +155,31 @@ function CourseOverview({
           </Card>
         </Link>
       </section>
+
+      {module.project && (
+        <section className="mb-8">
+          <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-zinc-900 dark:text-white">
+            <Hammer className="h-5 w-5 text-amber-500" />
+            {locale === "es" ? "Proyecto" : "Project"}
+          </h2>
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
+              {tBilingual(module.project.title)}
+            </h3>
+            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+              {tBilingual(module.project.description)}
+            </p>
+            <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-zinc-700 dark:text-zinc-300">
+              {(locale === "es" ? module.project.objectives.es : module.project.objectives.en).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            <p className="mt-4 text-sm text-zinc-500">
+              {module.project.estimatedTime}h · {module.project.rubric.es.reduce((sum, item) => sum + item.points, 0)} pts
+            </p>
+          </Card>
+        </section>
+      )}
 
       <section>
         <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-zinc-900 dark:text-white">

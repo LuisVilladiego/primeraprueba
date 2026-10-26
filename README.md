@@ -100,6 +100,7 @@ npm run tauri build
 | 13 | DevOps | ✅ 6 lecciones |
 | 14 | Terraform | ✅ 6 lecciones |
 | 15 | Kubernetes | ✅ 8 lecciones |
+| 16 | Nivel experto: observabilidad, secretos y DevOps avanzado | ✅ 8 lecciones |
 
 ## Documentación
 

@@ -209,6 +209,17 @@ const levels: Level[] = [
     duration: 300,
     skills: ["Pods", "Services", "Helm"]
   },
+  {
+    id: 16,
+    icon: "🛰️",
+    title: { es: "Nivel experto", en: "Expert level" },
+    description: { es: "Observabilidad, secretos y DevOps avanzado", en: "Observability, secrets, and advanced DevOps" },
+    href: null,
+    lessons: 8,
+    labs: 4,
+    duration: 240,
+    skills: ["Prometheus", "SLO", "Vault"]
+  },
 ];
 
 export function Roadmap() {
