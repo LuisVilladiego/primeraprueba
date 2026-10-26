@@ -20,7 +20,9 @@ export default defineConfig(async () => ({
   server: {
     port: 1420,
     strictPort: true,
-    host: host || false,
+    // Bind IPv4 explicitly so Tauri/WebKit can reach the dev server
+    // (localhost may resolve to ::1 only, while the app uses 127.0.0.1).
+    host: host || "127.0.0.1",
     hmr: host
       ? {
           protocol: "ws",
