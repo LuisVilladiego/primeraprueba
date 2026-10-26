@@ -15,6 +15,15 @@ export function LabPage() {
   const { slug } = useParams();
   const { tBilingual, locale } = useTranslation();
   const course = useActiveCourse();
+  if (!course) {
+    return (
+      <div className="flex h-[400px] items-center justify-center">
+        <p className="text-zinc-500">
+          {locale === "es" ? "Nivel no encontrado" : "Level not found"}
+        </p>
+      </div>
+    );
+  }
 
   const lab = course.labs.find((item) => item.slug === slug);
 

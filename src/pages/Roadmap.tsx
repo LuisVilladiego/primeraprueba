@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useProgressStore } from "@/stores/progressStore";
+import { getCourse } from "@/content/catalog";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Progress, ProgressRing } from "@/components/ui/Progress";
@@ -216,24 +217,41 @@ export function Roadmap() {
   const [filter, setFilter] = useState<"all" | "available" | "completed">("all");
   const [expandedLevel, setExpandedLevel] = useState<number | null>(null);
 
+  const roadmapLevels = levels.map((level) => {
+    const course = getCourse(level.id);
+    if (!course) return level;
+    const duration = course.lessons.reduce((sum, lesson) => sum + lesson.duration, 0);
+    return {
+      ...level,
+      href: `/courses/level-${level.id}`,
+      icon: course.module.icon || level.icon,
+      title: course.module.title,
+      description: course.module.description,
+      lessons: course.lessons.length,
+      labs: course.labs.length,
+      duration: duration || level.duration,
+      skills: course.module.skills.slice(0, 4),
+    };
+  });
+
   const getLevelStatus = (levelId: number) => {
-    if (levelId === 0 || levelId === 1) {
-      const progress = getModuleProgress(`level-${levelId}`);
-      if (isExamPassed(`exam-level-${levelId}`)) return "completed";
-      if (progress > 0) return "in_progress";
-      return "available";
+    if (!getCourse(levelId)) {
+      const prevExamPassed = levelId === 0 || isExamPassed(`exam-level-${levelId - 1}`);
+      return prevExamPassed ? "available" : "locked";
     }
-    const prevExamPassed = isExamPassed(`exam-level-${levelId - 1}`);
-    return prevExamPassed ? "available" : "locked";
+    const progress = getModuleProgress(`level-${levelId}`);
+    if (isExamPassed(`exam-level-${levelId}`)) return "completed";
+    if (progress > 0) return "in_progress";
+    return "available";
   };
 
-  const completedCount = levels.filter(l => getLevelStatus(l.id) === "completed").length;
-  const inProgressCount = levels.filter(l => getLevelStatus(l.id) === "in_progress").length;
-  const totalLessons = levels.reduce((sum, l) => sum + l.lessons, 0);
-  const totalLabs = levels.reduce((sum, l) => sum + l.labs, 0);
-  const overallProgress = Math.round((completedCount / levels.length) * 100);
+  const completedCount = roadmapLevels.filter(l => getLevelStatus(l.id) === "completed").length;
+  const inProgressCount = roadmapLevels.filter(l => getLevelStatus(l.id) === "in_progress").length;
+  const totalLessons = roadmapLevels.reduce((sum, l) => sum + l.lessons, 0);
+  const totalLabs = roadmapLevels.reduce((sum, l) => sum + l.labs, 0);
+  const overallProgress = Math.round((completedCount / roadmapLevels.length) * 100);
 
-  const filteredLevels = levels.filter(level => {
+  const filteredLevels = roadmapLevels.filter(level => {
     const status = getLevelStatus(level.id);
     if (filter === "all") return true;
     if (filter === "available") return status === "available" || status === "in_progress";
@@ -274,7 +292,7 @@ export function Roadmap() {
                 {locale === "es" ? "Progreso total" : "Total progress"}
               </p>
               <p className="text-xl font-bold text-zinc-900 dark:text-white">
-                {completedCount} / {levels.length}
+                {completedCount} / {roadmapLevels.length}
               </p>
               <p className="text-sm text-zinc-500">
                 {locale === "es" ? "niveles completados" : "levels completed"}
@@ -303,7 +321,7 @@ export function Roadmap() {
               <div className="flex items-center gap-1.5">
                 <Clock className="h-4 w-4 text-green-500" />
                 <span className="text-2xl font-bold text-zinc-900 dark:text-white">
-                  {Math.round(levels.reduce((sum, l) => sum + l.duration, 0) / 60)}h
+                  {Math.round(roadmapLevels.reduce((sum, l) => sum + l.duration, 0) / 60)}h
                 </span>
               </div>
               <p className="text-xs text-zinc-500">{locale === "es" ? "Contenido" : "Content"}</p>
@@ -341,7 +359,7 @@ export function Roadmap() {
         <div className="space-y-4">
           {filteredLevels.map((level, index) => {
             const status = getLevelStatus(level.id);
-            const progress = level.id <= 1 ? getModuleProgress(`level-${level.id}`) : 0;
+            const progress = getModuleProgress(`level-${level.id}`);
             const isLocked = status === "locked";
             const isCompleted = status === "completed";
             const isInProgress = status === "in_progress";

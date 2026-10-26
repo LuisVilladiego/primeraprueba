@@ -1,4 +1,5 @@
 import type { Lesson, ContentBlock, Quiz } from "@/types";
+import { level1RestLessons } from "./rest";
 
 function text(id: string, order: number, esTitle: string, esText: string, enTitle: string, enText: string): ContentBlock {
   return {
@@ -949,4 +950,5 @@ export const level1Lessons: Lesson[] = [
   lesson14,
   lesson15,
   lesson16,
+  ...level1RestLessons,
 ];

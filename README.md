@@ -84,9 +84,22 @@ npm run tauri build
 
 | Nivel | Tema | Estado |
 |-------|------|--------|
-| 0 | Fundamentos de Computación | ✅ Completo |
-| 1 | Linux Fundamentals (lecciones 1.1–1.6) | ✅ Primera parte |
-| 2-15 | ... | 🔜 Próximamente |
+| 0 | Fundamentos de Computación | ✅ 7 lecciones |
+| 1 | Linux Fundamentals (1.1–1.9) | ✅ 9 lecciones |
+| 2 | Administración Linux | ✅ 9 lecciones |
+| 3 | Networking | ✅ 10 lecciones |
+| 4 | SSH | ✅ 8 lecciones |
+| 5 | Git y GitHub | ✅ 10 lecciones |
+| 6 | Bash scripting | ✅ 12 lecciones |
+| 7 | Docker | ✅ 12 lecciones |
+| 8 | Nginx | ✅ 8 lecciones |
+| 9 | PostgreSQL | ✅ 8 lecciones |
+| 10 | Seguridad | ✅ 8 lecciones |
+| 11 | AWS | ✅ 8 lecciones |
+| 12 | CI/CD | ✅ 8 lecciones |
+| 13 | DevOps | ✅ 6 lecciones |
+| 14 | Terraform | ✅ 6 lecciones |
+| 15 | Kubernetes | ✅ 8 lecciones |
 
 ## Documentación
 

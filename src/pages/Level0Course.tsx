@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useProgressStore } from "@/stores/progressStore";
-import { level0Module, level0Lessons, level0Labs, level0Exam } from "@/content/modules/level-0";
-import { level1Module, level1Lessons, level1Labs, level1Exam } from "@/content/modules/level-1";
+import { useActiveCourse } from "@/content/useActiveCourse";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Progress } from "@/components/ui/Progress";
@@ -189,24 +188,26 @@ function CourseOverview({
   );
 }
 
-export function Level0Course() {
-  return (
-    <CourseOverview
-      module={level0Module}
-      lessons={level0Lessons}
-      labs={level0Labs}
-      exam={level0Exam}
-    />
-  );
-}
+export function CoursePage() {
+  const { locale } = useTranslation();
+  const course = useActiveCourse();
 
-export function Level1Course() {
+  if (!course) {
+    return (
+      <div className="flex h-[400px] items-center justify-center">
+        <p className="text-zinc-500">
+          {locale === "es" ? "Nivel no encontrado" : "Level not found"}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <CourseOverview
-      module={level1Module}
-      lessons={level1Lessons}
-      labs={level1Labs}
-      exam={level1Exam}
+      module={course.module}
+      lessons={course.lessons}
+      labs={course.labs}
+      exam={course.exam}
     />
   );
 }

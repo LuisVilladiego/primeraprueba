@@ -13,8 +13,8 @@ export const level1Module: Module = {
     en: "Linux Fundamentals",
   },
   description: {
-    es: "Domina la terminal: navega el sistema, entiende el árbol de directorios y manipula archivos con precisión. Las lecciones de texto, pipes y regex siguen en camino.",
-    en: "Master the terminal: navigate the system, understand the directory tree, and manipulate files with precision. Text, pipes, and regex lessons are still on the way.",
+    es: "Domina la terminal: navega el sistema, manipula archivos, filtra texto y encadena comandos.",
+    en: "Master the terminal: navigate the system, manipulate files, filter text, and chain commands.",
   },
   icon: "🐧",
   order: 1,
@@ -158,18 +158,117 @@ export const level1Labs: Lab[] = [
     estimatedTime: 25,
     order: 2,
   },
+  {
+    id: "lab-1-3",
+    moduleId: "level-1",
+    slug: "find-lost-files",
+    title: { es: "Encuentra archivos", en: "Find files" },
+    description: {
+      es: "Localiza un archivo por nombre y distingue find de which.",
+      en: "Locate a file by name and tell find apart from which.",
+    },
+    objectives: {
+      es: ["Crear un archivo de prueba", "Encontrarlo con find -name", "Ver qué ejecutable es ls"],
+      en: ["Create a practice file", "Find it with find -name", "See which executable ls is"],
+    },
+    prerequisites: { es: ["Lección 1.6"], en: ["Lesson 1.6"] },
+    instructions: {
+      es: [
+        { step: 1, instruction: "Crea ~/practica-linux/notas/perdido.txt", expectedResult: "El archivo existe" },
+        { step: 2, instruction: "Desde ~ ejecuta find . -name perdido.txt", expectedResult: "Aparece la ruta relativa" },
+        { step: 3, instruction: "Ejecuta which ls y whereis ls", expectedResult: "which muestra un ejecutable; whereis puede mostrar más rutas" },
+      ],
+      en: [
+        { step: 1, instruction: "Create ~/linux-practice/notes/lost.txt", expectedResult: "The file exists" },
+        { step: 2, instruction: "From ~ run find . -name lost.txt", expectedResult: "The relative path appears" },
+        { step: 3, instruction: "Run which ls and whereis ls", expectedResult: "which shows one executable; whereis may show more paths" },
+      ],
+    },
+    hints: { es: ["-name distingue mayúsculas", "which no busca documentos"], en: ["-name is case-sensitive", "which does not search documents"] },
+    solution: { es: "find muestra perdido.txt y which muestra el binario de ls.", en: "find shows lost.txt and which shows the ls binary." },
+    validationCriteria: [],
+    difficulty: "BEGINNER",
+    estimatedTime: 15,
+    order: 3,
+  },
+  {
+    id: "lab-1-4",
+    moduleId: "level-1",
+    slug: "analyze-logs",
+    title: { es: "Analiza logs", en: "Analyze logs" },
+    description: {
+      es: "Cuenta y filtra líneas de un log de práctica.",
+      en: "Count and filter lines in a practice log.",
+    },
+    objectives: {
+      es: ["Crear un log con errores repetidos", "Contar líneas", "Quedarte solo con los errores únicos"],
+      en: ["Create a log with repeated errors", "Count lines", "Keep only the unique errors"],
+    },
+    prerequisites: { es: ["Lección 1.7"], en: ["Lesson 1.7"] },
+    instructions: {
+      es: [
+        { step: 1, instruction: "Crea app.log con varias líneas info y error, algunas repetidas", expectedResult: "El archivo tiene más de cinco líneas" },
+        { step: 2, instruction: "grep error app.log | wc -l", expectedResult: "Un número de líneas con error" },
+        { step: 3, instruction: "grep error app.log | sort | uniq", expectedResult: "Cada mensaje de error aparece una vez" },
+      ],
+      en: [
+        { step: 1, instruction: "Create app.log with several info and error lines, some repeated", expectedResult: "The file has more than five lines" },
+        { step: 2, instruction: "grep error app.log | wc -l", expectedResult: "A count of error lines" },
+        { step: 3, instruction: "grep error app.log | sort | uniq", expectedResult: "Each error message appears once" },
+      ],
+    },
+    hints: { es: ["uniq necesita líneas consecutivas iguales", "grep -i ignora mayúsculas"], en: ["uniq needs identical consecutive lines", "grep -i ignores case"] },
+    solution: { es: "El conteo y la lista única salen de grep, sort y uniq.", en: "The count and the unique list come from grep, sort, and uniq." },
+    validationCriteria: [],
+    difficulty: "BEGINNER",
+    estimatedTime: 20,
+    order: 4,
+  },
+  {
+    id: "lab-1-5",
+    moduleId: "level-1",
+    slug: "data-pipeline",
+    title: { es: "Pipeline de datos", en: "Data pipeline" },
+    description: {
+      es: "Encadena comandos para resumir un archivo y guardar el resultado.",
+      en: "Chain commands to summarize a file and save the result.",
+    },
+    objectives: {
+      es: ["Usar un pipe", "Añadir el resultado a un archivo", "Filtrar con una expresión regular"],
+      en: ["Use a pipe", "Append the result to a file", "Filter with a regular expression"],
+    },
+    prerequisites: { es: ["Lecciones 1.8 y 1.9"], en: ["Lessons 1.8 and 1.9"] },
+    instructions: {
+      es: [
+        { step: 1, instruction: "Crea datos.txt con palabras y números en líneas distintas", expectedResult: "Archivo creado" },
+        { step: 2, instruction: "grep -E '[0-9]+' datos.txt | wc -l > resumen.txt", expectedResult: "resumen.txt contiene un número" },
+        { step: 3, instruction: "date >> resumen.txt && cat resumen.txt", expectedResult: "El número y la fecha están en el archivo" },
+      ],
+      en: [
+        { step: 1, instruction: "Create data.txt with words and numbers on separate lines", expectedResult: "File created" },
+        { step: 2, instruction: "grep -E '[0-9]+' data.txt | wc -l > summary.txt", expectedResult: "summary.txt contains a number" },
+        { step: 3, instruction: "date >> summary.txt && cat summary.txt", expectedResult: "The number and the date are in the file" },
+      ],
+    },
+    hints: { es: ["> pisa el archivo", ">> no lo borra"], en: ["> overwrites the file", ">> does not erase it"] },
+    solution: { es: "resumen.txt tiene el conteo de líneas con dígitos y una fecha añadida.", en: "summary.txt has the count of lines with digits and an appended date." },
+    validationCriteria: [],
+    difficulty: "BEGINNER",
+    estimatedTime: 20,
+    order: 5,
+  },
 ];
 
 export const level1Exam: Exam = {
   id: "exam-level-1",
   moduleId: "level-1",
   title: {
-    es: "Examen — Linux Fundamentals (parte 1)",
-    en: "Exam — Linux Fundamentals (part 1)",
+    es: "Examen — Linux Fundamentals",
+    en: "Exam — Linux Fundamentals",
   },
   description: {
-    es: "Comprueba navegación, FHS y manipulación de archivos. Cubre las lecciones 1.1 a 1.6.",
-    en: "Checks navigation, the FHS, and file manipulation. Covers lessons 1.1 through 1.6.",
+    es: "Comprueba navegación, archivos, búsqueda, texto, pipes y expresiones regulares.",
+    en: "Checks navigation, files, search, text, pipes, and regular expressions.",
   },
   passingScore: 80,
   timeLimit: null,
@@ -337,6 +436,66 @@ export const level1Exam: Exam = {
       points: 5,
       difficulty: "BEGINNER",
       category: "fhs",
+    },
+    {
+      id: "q-1-e-9",
+      type: "MULTIPLE_CHOICE",
+      question: {
+        es: "¿Qué comando cuenta las líneas de un archivo?",
+        en: "Which command counts the lines in a file?",
+      },
+      options: {
+        es: ["wc -l archivo", "uniq archivo", "pwd archivo", "chmod archivo"],
+        en: ["wc -l file", "uniq file", "pwd file", "chmod file"],
+      },
+      correctAnswer: "0",
+      explanation: {
+        es: "wc -l cuenta líneas. uniq no cuenta el total del archivo.",
+        en: "wc -l counts lines. uniq does not count the whole file.",
+      },
+      points: 5,
+      difficulty: "BEGINNER",
+      category: "text",
+    },
+    {
+      id: "q-1-e-10",
+      type: "MULTIPLE_CHOICE",
+      question: {
+        es: "Quieres guardar la salida de ls en un archivo nuevo y borrar lo que hubiera antes. ¿Qué usas?",
+        en: "You want to save ls output in a new file and erase whatever was there. What do you use?",
+      },
+      options: {
+        es: ["ls >> lista.txt", "ls > lista.txt", "ls | lista.txt", "ls < lista.txt"],
+        en: ["ls >> list.txt", "ls > list.txt", "ls | list.txt", "ls < list.txt"],
+      },
+      correctAnswer: "1",
+      explanation: {
+        es: "> trunca o crea el archivo. >> añadiría al final.",
+        en: "> truncates or creates the file. >> would append.",
+      },
+      points: 5,
+      difficulty: "BEGINNER",
+      category: "pipes",
+    },
+    {
+      id: "q-1-e-11",
+      type: "MULTIPLE_CHOICE",
+      question: {
+        es: "¿Qué patrón de grep -E encuentra líneas que empiezan por error?",
+        en: "Which grep -E pattern finds lines that start with error?",
+      },
+      options: {
+        es: ["error$", "^error", "[error]", "error+"],
+        en: ["error$", "^error", "[error]", "error+"],
+      },
+      correctAnswer: "1",
+      explanation: {
+        es: "^ ancla al inicio de la línea. $ ancla al final.",
+        en: "^ anchors to the start of the line. $ anchors to the end.",
+      },
+      points: 5,
+      difficulty: "BEGINNER",
+      category: "regex",
     },
   ],
 };

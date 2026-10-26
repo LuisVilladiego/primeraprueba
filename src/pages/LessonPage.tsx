@@ -72,6 +72,15 @@ export function LessonPage() {
   const { updateStats, incrementXp, stats } = useUserStore();
 
   const course = useActiveCourse();
+  if (!course) {
+    return (
+      <div className="flex h-[400px] items-center justify-center">
+        <p className="text-zinc-500">
+          {locale === "es" ? "Nivel no encontrado" : "Level not found"}
+        </p>
+      </div>
+    );
+  }
   const lesson = course.contentBySlug[slug || ""];
   const currentIndex = course.lessons.findIndex((item) => item.slug === slug);
   const prevLesson = currentIndex > 0 ? course.lessons[currentIndex - 1] : null;
