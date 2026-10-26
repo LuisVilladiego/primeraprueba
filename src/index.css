@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* El botón de tema pone la clase .dark en <html>. Sin esto, dark: sigue prefers-color-scheme y el botón no cambia la pantalla. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary-50: oklch(0.97 0.02 250);
   --color-primary-100: oklch(0.93 0.04 250);
@@ -89,6 +92,11 @@
 @layer base {
   html {
     font-family: var(--font-family-sans);
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
   
   body {

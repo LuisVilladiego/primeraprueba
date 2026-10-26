@@ -1,15 +1,9 @@
+import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useProgressStore } from "@/stores/progressStore";
 import { useUserStore } from "@/stores/userStore";
-import { level0Lessons } from "@/content/modules/level-0";
-import { lesson01 } from "@/content/modules/level-0/lessons/lesson-0-1";
-import { lesson02 } from "@/content/modules/level-0/lessons/lesson-0-2";
-import { lesson03 } from "@/content/modules/level-0/lessons/lesson-0-3";
-import { lesson04 } from "@/content/modules/level-0/lessons/lesson-0-4";
-import { lesson05 } from "@/content/modules/level-0/lessons/lesson-0-5";
-import { lesson06 } from "@/content/modules/level-0/lessons/lesson-0-6";
-import { lesson07 } from "@/content/modules/level-0/lessons/lesson-0-7";
+import { useActiveCourse } from "@/content/useActiveCourse";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -25,17 +19,36 @@ import {
   Code,
   BookOpen
 } from "lucide-react";
-import type { ContentBlock } from "@/types";
+import type { ContentBlock, DiagramNode } from "@/types";
+import { LessonChecks } from "./LessonChecks";
 
-const lessonsData: Record<string, typeof lesson01> = {
-  "what-is-a-computer": lesson01,
-  "what-is-an-operating-system": lesson02,
-  "processes-and-memory": lesson03,
-  "storage-and-files": lesson04,
-  "user-interfaces": lesson05,
-  "linux-history": lesson06,
-  "linux-vs-windows-vs-macos": lesson07,
-};
+function youtubeId(url: string): string | null {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname === "youtu.be") return parsed.pathname.slice(1) || null;
+    return parsed.searchParams.get("v");
+  } catch {
+    return null;
+  }
+}
+
+function DiagramNodes({ nodes }: { nodes: DiagramNode[] }) {
+  return (
+    <ul className="mt-2 space-y-2">
+      {nodes.map((node) => (
+        <li key={node.id} className="rounded-md bg-white/70 px-3 py-2 dark:bg-zinc-900/40">
+          <p className="font-medium">{node.label}</p>
+          {node.description && <p className="text-sm text-zinc-600 dark:text-zinc-400">{node.description}</p>}
+          {node.children && node.children.length > 0 && (
+            <div className="ml-4 mt-2 border-l border-zinc-300 pl-3 dark:border-zinc-600">
+              <DiagramNodes nodes={node.children} />
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 function ContentBlockRenderer({ block, locale }: { block: ContentBlock; locale: string }) {
   const content = block.content[locale as "es" | "en"];
@@ -48,6 +61,53 @@ function ContentBlockRenderer({ block, locale }: { block: ContentBlock; locale: 
   };
 
   const style = blockStyles[block.type];
+
+  if (block.type === "VIDEO" && content.videoUrl) {
+    const id = youtubeId(content.videoUrl);
+    return (
+      <div>
+        {content.title && <h2 className="mb-2 text-xl font-semibold">{content.title}</h2>}
+        {content.text && <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-400">{content.text}</p>}
+        {id ? (
+          <div className="aspect-video overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
+            <iframe
+              className="h-full w-full"
+              src={`https://www.youtube-nocookie.com/embed/${id}`}
+              title={content.title || "YouTube"}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        ) : (
+          <a className="text-blue-600 underline" href={content.videoUrl}>{content.videoUrl}</a>
+        )}
+      </div>
+    );
+  }
+
+  if (block.type === "DIAGRAM" && content.diagramData) {
+    return (
+      <div className="rounded-lg border border-indigo-200 bg-indigo-50 p-4 dark:border-indigo-800 dark:bg-indigo-900/20">
+        {content.title && <h3 className="font-semibold">{content.title}</h3>}
+        <DiagramNodes nodes={content.diagramData.nodes} />
+      </div>
+    );
+  }
+
+  if (content.terminalCommands && content.terminalCommands.length > 0) {
+    return (
+      <div className="space-y-3">
+        {content.title && <h3 className="font-semibold">{content.title}</h3>}
+        {content.terminalCommands.map((command) => (
+          <div key={command.command} className="rounded-lg bg-zinc-950 p-3 text-sm text-zinc-100">
+            <p className="font-mono text-green-300">$ {command.command}</p>
+            <pre className="mt-2 whitespace-pre-wrap text-zinc-300">{command.output}</pre>
+            {command.explanation && <p className="mt-2 text-zinc-400">{command.explanation}</p>}
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   if (block.type === "TEXT") {
     return (
@@ -88,10 +148,44 @@ export function LessonPage() {
   const { markAsCompleted, markAsStarted, getProgress } = useProgressStore();
   const { updateStats, incrementXp, stats } = useUserStore();
 
-  const lesson = lessonsData[slug || ""] || lesson01;
-  const currentIndex = level0Lessons.findIndex((l) => l.slug === slug);
-  const prevLesson = currentIndex > 0 ? level0Lessons[currentIndex - 1] : null;
-  const nextLesson = currentIndex < level0Lessons.length - 1 ? level0Lessons[currentIndex + 1] : null;
+  const [quizPassed, setQuizPassed] = useState(false);
+  const [quizFinished, setQuizFinished] = useState(false);
+  const [quizAttempt, setQuizAttempt] = useState(0);
+  const course = useActiveCourse();
+  const lesson = course?.contentBySlug[slug || ""];
+  const currentIndex = course && lesson ? course.lessons.findIndex((item) => item.slug === slug) : -1;
+  const prevLesson = course && currentIndex > 0 ? course.lessons[currentIndex - 1] : null;
+  const nextLesson = course && currentIndex >= 0 && currentIndex < course.lessons.length - 1
+    ? course.lessons[currentIndex + 1]
+    : null;
+
+  useEffect(() => {
+    if (!lesson) return;
+    const open = !lesson.quiz || lesson.quiz.questions.length === 0;
+    setQuizPassed(open);
+    setQuizFinished(open);
+    setQuizAttempt(0);
+  }, [lesson?.id, lesson?.quiz?.questions.length]);
+
+  if (!course) {
+    return (
+      <div className="flex h-[400px] items-center justify-center">
+        <p className="text-zinc-500">
+          {locale === "es" ? "Nivel no encontrado" : "Level not found"}
+        </p>
+      </div>
+    );
+  }
+
+  if (!lesson) {
+    return (
+      <div className="flex h-[400px] items-center justify-center">
+        <p className="text-zinc-500">
+          {locale === "es" ? "Lección no encontrada" : "Lesson not found"}
+        </p>
+      </div>
+    );
+  }
 
   const progress = getProgress("LESSON", lesson.id);
   const isCompleted = progress?.status === "COMPLETED" || progress?.status === "MASTERED";
@@ -108,9 +202,9 @@ export function LessonPage() {
     });
 
     if (nextLesson) {
-      navigate(`/courses/level-0/lessons/${nextLesson.slug}`);
+      navigate(`${course.coursePath}/lessons/${nextLesson.slug}`);
     } else {
-      navigate("/courses/level-0");
+      navigate(course.coursePath);
     }
   };
 
@@ -118,8 +212,8 @@ export function LessonPage() {
     <div className="mx-auto max-w-4xl">
       {/* Breadcrumb */}
       <div className="mb-6 flex items-center gap-2 text-sm text-zinc-500">
-        <Link to="/courses/level-0" className="hover:text-zinc-900 dark:hover:text-white">
-          {t("roadmap.level")} 0
+        <Link to={course.coursePath} className="hover:text-zinc-900 dark:hover:text-white">
+          {t("roadmap.level")} {course.level}
         </Link>
         <span>/</span>
         <span className="text-zinc-900 dark:text-white">
@@ -159,10 +253,10 @@ export function LessonPage() {
         <div className="mt-4">
           <Progress
             value={currentIndex + 1}
-            max={level0Lessons.length}
+            max={course.lessons.length}
             size="sm"
             showLabel
-            label={`${t("learning.lesson")} ${currentIndex + 1}/${level0Lessons.length}`}
+            label={`${t("learning.lesson")} ${currentIndex + 1}/${course.lessons.length}`}
           />
         </div>
       </Card>
@@ -175,9 +269,26 @@ export function LessonPage() {
           ))}
         </div>
 
+        <LessonChecks
+          key={quizAttempt}
+          exercises={lesson.exercises}
+          questions={lesson.quiz?.questions ?? []}
+          passingScore={lesson.quiz?.passingScore ?? 70}
+          locale={locale === "en" ? "en" : "es"}
+          onQuizPassed={(passed) => {
+            setQuizPassed(passed);
+            setQuizFinished(true);
+          }}
+        />
+
         {!isCompleted && (
-          <div className="mt-8 flex justify-center">
-            <Button variant="primary" size="lg" onClick={handleComplete}>
+          <div className="mt-8 flex flex-col items-center gap-3">
+            {quizFinished && !quizPassed && (
+              <Button variant="outline" onClick={() => setQuizAttempt((attempt) => attempt + 1)}>
+                {locale === "es" ? "Reintentar el quiz" : "Retry the quiz"}
+              </Button>
+            )}
+            <Button variant="primary" size="lg" onClick={handleComplete} disabled={!quizPassed}>
               <CheckCircle2 className="mr-2 h-5 w-5" />
               {locale === "es" ? "Marcar como completada" : "Mark as completed"}
             </Button>
@@ -188,7 +299,7 @@ export function LessonPage() {
       {/* Navigation */}
       <div className="flex items-center justify-between">
         {prevLesson ? (
-          <Link to={`/courses/level-0/lessons/${prevLesson.slug}`}>
+          <Link to={`${course.coursePath}/lessons/${prevLesson.slug}`}>
             <Button variant="outline">
               <ArrowLeft className="mr-2 h-4 w-4" />
               {t("learning.previousLesson")}
@@ -199,14 +310,14 @@ export function LessonPage() {
         )}
 
         {nextLesson ? (
-          <Link to={`/courses/level-0/lessons/${nextLesson.slug}`}>
+          <Link to={`${course.coursePath}/lessons/${nextLesson.slug}`}>
             <Button variant="outline">
               {t("learning.nextLesson")}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
         ) : (
-          <Link to="/courses/level-0">
+          <Link to={course.coursePath}>
             <Button variant="primary">
               {locale === "es" ? "Volver al curso" : "Back to course"}
               <ArrowRight className="ml-2 h-4 w-4" />

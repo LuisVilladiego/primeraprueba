@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useProgressStore } from "@/stores/progressStore";
-import { level0Module, level0Lessons, level0Labs } from "@/content/modules/level-0";
+import { useActiveCourse } from "@/content/useActiveCourse";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Progress } from "@/components/ui/Progress";
@@ -13,21 +13,33 @@ import {
   Clock, 
   CheckCircle2, 
   ChevronRight,
-  ArrowLeft
+  ArrowLeft,
+  Hammer
 } from "lucide-react";
+import type { Exam, Lab, Lesson, Module } from "@/types";
 
-export function Level0Course() {
+function CourseOverview({
+  module,
+  lessons,
+  labs,
+  exam,
+}: {
+  module: Module;
+  lessons: Lesson[];
+  labs: Lab[];
+  exam: Exam;
+}) {
   const { t, tBilingual, locale } = useTranslation();
   const { getProgress, getModuleProgress } = useProgressStore();
 
-  const moduleProgress = getModuleProgress("level-0");
-  const completedLessons = level0Lessons.filter(
-    (l) => getProgress("LESSON", l.id)?.status === "COMPLETED"
+  const moduleProgress = getModuleProgress(module.id);
+  const completedLessons = lessons.filter(
+    (lesson) => getProgress("LESSON", lesson.id)?.status === "COMPLETED"
   ).length;
+  const coursePath = `/courses/${module.id}`;
 
   return (
     <div className="mx-auto max-w-4xl">
-      {/* Header */}
       <div className="mb-6">
         <Link 
           to="/roadmap" 
@@ -39,29 +51,28 @@ export function Level0Course() {
         
         <div className="flex items-start gap-4">
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 text-3xl">
-            {level0Module.icon}
+            {module.icon}
           </div>
           <div className="flex-1">
             <Badge variant="primary" className="mb-2">
-              {t("roadmap.level")} {level0Module.level}
+              {t("roadmap.level")} {module.level}
             </Badge>
             <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-              {tBilingual(level0Module.title)}
+              {tBilingual(module.title)}
             </h1>
             <p className="mt-1 text-zinc-600 dark:text-zinc-400">
-              {tBilingual(level0Module.description)}
+              {tBilingual(module.description)}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Progress */}
       <Card className="mb-6 p-4">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-zinc-500">{t("dashboard.overallProgress")}</p>
             <p className="text-lg font-semibold text-zinc-900 dark:text-white">
-              {completedLessons} / {level0Lessons.length} {locale === "es" ? "lecciones" : "lessons"}
+              {completedLessons} / {lessons.length} {locale === "es" ? "lecciones" : "lessons"}
             </p>
           </div>
           <div className="w-32">
@@ -70,19 +81,18 @@ export function Level0Course() {
         </div>
       </Card>
 
-      {/* Lessons */}
       <section className="mb-8">
         <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-zinc-900 dark:text-white">
           <BookOpen className="h-5 w-5 text-blue-500" />
           {locale === "es" ? "Lecciones" : "Lessons"}
         </h2>
         <div className="space-y-3">
-          {level0Lessons.map((lesson, index) => {
+          {lessons.map((lesson, index) => {
             const progress = getProgress("LESSON", lesson.id);
             const isCompleted = progress?.status === "COMPLETED";
 
             return (
-              <Link key={lesson.id} to={`/courses/level-0/lessons/${lesson.slug}`}>
+              <Link key={lesson.id} to={`${coursePath}/lessons/${lesson.slug}`}>
                 <Card className="p-4 transition-all hover:shadow-md">
                   <div className="flex items-center gap-4">
                     <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${
@@ -119,13 +129,12 @@ export function Level0Course() {
         </div>
       </section>
 
-      {/* Labs */}
       <section className="mb-8">
         <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-zinc-900 dark:text-white">
           <FlaskConical className="h-5 w-5 text-purple-500" />
           {locale === "es" ? "Laboratorios" : "Labs"}
         </h2>
-        <Link to="/courses/level-0/labs">
+        <Link to={`${coursePath}/labs`}>
           <Card className="p-4 transition-all hover:shadow-md">
             <div className="flex items-center gap-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-900/30">
@@ -133,7 +142,7 @@ export function Level0Course() {
               </div>
               <div className="flex-1">
                 <h3 className="font-medium text-zinc-900 dark:text-white">
-                  {level0Labs.length} {locale === "es" ? "laboratorios disponibles" : "labs available"}
+                  {labs.length} {locale === "es" ? "laboratorios disponibles" : "labs available"}
                 </h3>
                 <p className="text-sm text-zinc-500">
                   {locale === "es" 
@@ -147,13 +156,37 @@ export function Level0Course() {
         </Link>
       </section>
 
-      {/* Exam */}
+      {module.project && (
+        <section className="mb-8">
+          <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-zinc-900 dark:text-white">
+            <Hammer className="h-5 w-5 text-amber-500" />
+            {locale === "es" ? "Proyecto" : "Project"}
+          </h2>
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
+              {tBilingual(module.project.title)}
+            </h3>
+            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+              {tBilingual(module.project.description)}
+            </p>
+            <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-zinc-700 dark:text-zinc-300">
+              {(locale === "es" ? module.project.objectives.es : module.project.objectives.en).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            <p className="mt-4 text-sm text-zinc-500">
+              {module.project.estimatedTime}h · {module.project.rubric.es.reduce((sum, item) => sum + item.points, 0)} pts
+            </p>
+          </Card>
+        </section>
+      )}
+
       <section>
         <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-zinc-900 dark:text-white">
           <GraduationCap className="h-5 w-5 text-green-500" />
           {locale === "es" ? "Examen Final" : "Final Exam"}
         </h2>
-        <Link to="/exams/level-0">
+        <Link to={`/exams/${module.id}`}>
           <Card className="p-6 transition-all hover:shadow-md">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
@@ -162,12 +195,10 @@ export function Level0Course() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-                    {locale === "es" ? "Examen de Fundamentos" : "Fundamentals Exam"}
+                    {tBilingual(exam.title)}
                   </h3>
                   <p className="text-sm text-zinc-500">
-                    {locale === "es" 
-                      ? "20 preguntas • Requiere 80% para aprobar" 
-                      : "20 questions • Requires 80% to pass"}
+                    {exam.questions.length} {locale === "es" ? "preguntas" : "questions"} • {exam.passingScore}%
                   </p>
                 </div>
               </div>
@@ -180,5 +211,29 @@ export function Level0Course() {
         </Link>
       </section>
     </div>
+  );
+}
+
+export function CoursePage() {
+  const { locale } = useTranslation();
+  const course = useActiveCourse();
+
+  if (!course) {
+    return (
+      <div className="flex h-[400px] items-center justify-center">
+        <p className="text-zinc-500">
+          {locale === "es" ? "Nivel no encontrado" : "Level not found"}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <CourseOverview
+      module={course.module}
+      lessons={course.lessons}
+      labs={course.labs}
+      exam={course.exam}
+    />
   );
 }

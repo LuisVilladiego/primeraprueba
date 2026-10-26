@@ -3,7 +3,7 @@ import { ThemeProvider } from "./components/ThemeProvider";
 import { MainLayout } from "./components/layout/MainLayout";
 import { Dashboard } from "./pages/Dashboard";
 import { Roadmap } from "./pages/Roadmap";
-import { Level0Course } from "./pages/Level0Course";
+import { CoursePage } from "./pages/Level0Course";
 import { LessonPage } from "./pages/LessonPage";
 import { LabsPage } from "./pages/LabsPage";
 import { LabPage } from "./pages/LabPage";
@@ -32,11 +32,11 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/roadmap" element={<Roadmap />} />
-          <Route path="/courses/level-0" element={<Level0Course />} />
-          <Route path="/courses/level-0/lessons/:slug" element={<LessonPage />} />
-          <Route path="/courses/level-0/labs" element={<LabsPage />} />
-          <Route path="/courses/level-0/labs/:slug" element={<LabPage />} />
-          <Route path="/exams/level-0" element={<ExamPage />} />
+          <Route path="/courses/:courseId" element={<CoursePage />} />
+          <Route path="/courses/:courseId/lessons/:slug" element={<LessonPage />} />
+          <Route path="/courses/:courseId/labs" element={<LabsPage />} />
+          <Route path="/courses/:courseId/labs/:slug" element={<LabPage />} />
+          <Route path="/exams/:courseId" element={<ExamPage />} />
           <Route path="/terminal" element={<TerminalPage />} />
           <Route path="/achievements" element={<AchievementsPage />} />
           <Route path="/profile" element={<ProfilePage />} />

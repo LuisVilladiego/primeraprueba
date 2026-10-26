@@ -614,26 +614,26 @@ export const level0Exam: Exam = {
     },
     {
       id: "q-0-14",
-      type: "ORDERING",
+      type: "MULTIPLE_CHOICE",
       question: {
-        es: "Ordena los siguientes eventos en la historia de Linux, del más antiguo al más reciente:",
-        en: "Order the following events in Linux history, from oldest to most recent:",
+        es: "¿Cuál es el orden cronológico correcto, del más antiguo al más reciente?",
+        en: "Which is the correct chronological order, from oldest to most recent?",
       },
       options: {
         es: [
-          "Creación de UNIX",
-          "Richard Stallman inicia el proyecto GNU",
-          "Linus Torvalds crea el kernel Linux",
-          "Lanzamiento de Ubuntu",
+          "UNIX, proyecto GNU, kernel Linux, Ubuntu",
+          "Ubuntu, kernel Linux, GNU, UNIX",
+          "Kernel Linux, UNIX, Ubuntu, GNU",
+          "GNU, Ubuntu, UNIX, kernel Linux",
         ],
         en: [
-          "Creation of UNIX",
-          "Richard Stallman starts the GNU project",
-          "Linus Torvalds creates the Linux kernel",
-          "Ubuntu launch",
+          "UNIX, GNU project, Linux kernel, Ubuntu",
+          "Ubuntu, Linux kernel, GNU, UNIX",
+          "Linux kernel, UNIX, Ubuntu, GNU",
+          "GNU, Ubuntu, UNIX, Linux kernel",
         ],
       },
-      correctAnswer: ["0", "1", "2", "3"],
+      correctAnswer: "0",
       explanation: {
         es: "UNIX (1969) → GNU (1983) → Linux kernel (1991) → Ubuntu (2004)",
         en: "UNIX (1969) → GNU (1983) → Linux kernel (1991) → Ubuntu (2004)",

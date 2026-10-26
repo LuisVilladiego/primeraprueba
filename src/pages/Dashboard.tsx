@@ -22,6 +22,7 @@ export function Dashboard() {
   useAchievementTracker();
 
   const level0Progress = getModuleProgress("level-0");
+  const level1Progress = getModuleProgress("level-1");
 
   const objectives = [
     {
@@ -41,6 +42,15 @@ export function Dashboard() {
       href: "/exams/level-0",
       progress: 0,
       icon: GraduationCap,
+    },
+    {
+      title: locale === "es" ? "Nivel 1: la terminal" : "Level 1: the terminal",
+      description: locale === "es"
+        ? "Navega, crea archivos y encuéntralos"
+        : "Navigate, create files, and find them",
+      href: "/courses/level-1",
+      progress: level1Progress,
+      icon: BookOpen,
     },
     {
       title: locale === "es" ? "Practicar en terminal" : "Practice in terminal",
@@ -184,7 +194,7 @@ export function Dashboard() {
 
       {/* Quick Action */}
       <div className="flex justify-center animate-[fade-in-up_0.4s_ease-out_0.5s_both]">
-        <Link to="/courses/level-0">
+        <Link to={level0Progress >= 100 ? "/courses/level-1" : "/courses/level-0"}>
           <Button variant="primary" size="lg">
             {t("dashboard.continueStudying")}
             <ChevronRight className="h-5 w-5" />

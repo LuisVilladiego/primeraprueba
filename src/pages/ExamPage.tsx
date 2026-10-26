@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useProgressStore } from "@/stores/progressStore";
 import { useUserStore } from "@/stores/userStore";
-import { level0Exam } from "@/content/modules/level-0";
+import { useActiveCourse } from "@/content/useActiveCourse";
+import { scoreExam } from "@/content/examScore";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -27,12 +28,22 @@ export function ExamPage() {
   const { t, tBilingual, locale } = useTranslation();
   const { markAsCompleted, getProgress, setExamPassed } = useProgressStore();
   const { incrementXp, updateStats, stats } = useUserStore();
-
+  const course = useActiveCourse();
   const [examState, setExamState] = useState<ExamState>("start");
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [showResults, setShowResults] = useState(false);
 
+  if (!course) {
+    return (
+      <div className="flex h-[400px] items-center justify-center">
+        <p className="text-zinc-500">
+          {locale === "es" ? "Examen no encontrado" : "Exam not found"}
+        </p>
+      </div>
+    );
+  }
+  const level0Exam = course.exam;
   const questions = level0Exam.questions;
   const progress = getProgress("EXAM", level0Exam.id);
   const alreadyPassed = progress?.status === "COMPLETED";
@@ -64,21 +75,7 @@ export function ExamPage() {
     setShowResults(true);
   };
 
-  const calculateScore = () => {
-    let correct = 0;
-    let total = 0;
-
-    questions.forEach((q) => {
-      total += q.points;
-      const userAnswer = answers[q.id];
-      if (userAnswer === q.correctAnswer || 
-          (Array.isArray(q.correctAnswer) && JSON.stringify(userAnswer) === JSON.stringify(q.correctAnswer))) {
-        correct += q.points;
-      }
-    });
-
-    return { correct, total, percentage: Math.round((correct / total) * 100) };
-  };
+  const calculateScore = () => scoreExam(questions, answers);
 
   const { correct, total, percentage } = showResults ? calculateScore() : { correct: 0, total: 0, percentage: 0 };
   const passed = percentage >= level0Exam.passingScore;
@@ -96,8 +93,8 @@ export function ExamPage() {
     <div className="mx-auto max-w-4xl">
       {/* Breadcrumb */}
       <div className="mb-6 flex items-center gap-2 text-sm text-zinc-500">
-        <Link to="/courses/level-0" className="hover:text-zinc-900 dark:hover:text-white">
-          {t("roadmap.level")} 0
+        <Link to={course.coursePath} className="hover:text-zinc-900 dark:hover:text-white">
+          {t("roadmap.level")} {course.level}
         </Link>
         <span>/</span>
         <span className="text-zinc-900 dark:text-white">
@@ -299,7 +296,7 @@ export function ExamPage() {
               </Button>
             ) : (
               <>
-                <Button variant="outline" onClick={() => navigate("/courses/level-0")}>
+                <Button variant="outline" onClick={() => navigate(course.coursePath)}>
                   {locale === "es" ? "Revisar Material" : "Review Material"}
                 </Button>
                 <Button variant="primary" onClick={handleStartExam}>

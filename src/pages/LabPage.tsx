@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useTranslation } from "@/hooks/useTranslation";
-import { level0Labs } from "@/content/modules/level-0";
+import { useActiveCourse } from "@/content/useActiveCourse";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { 
@@ -14,8 +14,18 @@ import {
 export function LabPage() {
   const { slug } = useParams();
   const { tBilingual, locale } = useTranslation();
+  const course = useActiveCourse();
+  if (!course) {
+    return (
+      <div className="flex h-[400px] items-center justify-center">
+        <p className="text-zinc-500">
+          {locale === "es" ? "Nivel no encontrado" : "Level not found"}
+        </p>
+      </div>
+    );
+  }
 
-  const lab = level0Labs.find((l) => l.slug === slug);
+  const lab = course.labs.find((item) => item.slug === slug);
 
   if (!lab) {
     return (
@@ -35,11 +45,11 @@ export function LabPage() {
     <div className="mx-auto max-w-4xl">
       {/* Breadcrumb */}
       <div className="mb-6 flex items-center gap-2 text-sm text-zinc-500">
-        <Link to="/courses/level-0" className="hover:text-zinc-900 dark:hover:text-white">
-          Nivel 0
+        <Link to={course.coursePath} className="hover:text-zinc-900 dark:hover:text-white">
+          {locale === "es" ? `Nivel ${course.level}` : `Level ${course.level}`}
         </Link>
         <span>/</span>
-        <Link to="/courses/level-0/labs" className="hover:text-zinc-900 dark:hover:text-white">
+        <Link to={course.labsPath} className="hover:text-zinc-900 dark:hover:text-white">
           Labs
         </Link>
         <span>/</span>
@@ -132,6 +142,22 @@ export function LabPage() {
           ))}
         </ol>
       </Card>
+
+      {lab.validationCriteria.length > 0 && (
+        <Card className="mt-6 p-6">
+          <h2 className="mb-3 text-lg font-semibold text-zinc-900 dark:text-white">
+            {locale === "es" ? "Se considera hecho cuando" : "It counts as done when"}
+          </h2>
+          <ul className="space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
+            {lab.validationCriteria.map((criterion) => (
+              <li key={criterion.check}>
+                <span className="font-mono text-xs text-zinc-500">{criterion.check}</span>
+                <span> — {criterion.expected}</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
 
       {/* Link to Terminal */}
       <Card className="mt-6 p-4">
