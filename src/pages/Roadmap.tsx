@@ -48,11 +48,11 @@ const levels: Level[] = [
     icon: "🐧", 
     title: { es: "Linux Fundamentals", en: "Linux Fundamentals" },
     description: { es: "Domina los fundamentos del sistema operativo Linux", en: "Master the fundamentals of the Linux operating system" },
-    href: null,
-    lessons: 10,
-    labs: 8,
-    duration: 180,
-    skills: ["Permisos", "Usuarios", "Procesos"]
+    href: "/courses/level-1",
+    lessons: 6,
+    labs: 2,
+    duration: 140,
+    skills: ["Terminal", "FHS", "Archivos", "find"]
   },
   { 
     id: 2, 
@@ -217,9 +217,9 @@ export function Roadmap() {
   const [expandedLevel, setExpandedLevel] = useState<number | null>(null);
 
   const getLevelStatus = (levelId: number) => {
-    if (levelId === 0) {
-      const progress = getModuleProgress("level-0");
-      if (isExamPassed("exam-level-0")) return "completed";
+    if (levelId === 0 || levelId === 1) {
+      const progress = getModuleProgress(`level-${levelId}`);
+      if (isExamPassed(`exam-level-${levelId}`)) return "completed";
       if (progress > 0) return "in_progress";
       return "available";
     }
@@ -341,7 +341,7 @@ export function Roadmap() {
         <div className="space-y-4">
           {filteredLevels.map((level, index) => {
             const status = getLevelStatus(level.id);
-            const progress = level.id === 0 ? getModuleProgress("level-0") : 0;
+            const progress = level.id <= 1 ? getModuleProgress(`level-${level.id}`) : 0;
             const isLocked = status === "locked";
             const isCompleted = status === "completed";
             const isInProgress = status === "in_progress";

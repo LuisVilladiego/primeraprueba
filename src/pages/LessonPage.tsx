@@ -2,14 +2,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useProgressStore } from "@/stores/progressStore";
 import { useUserStore } from "@/stores/userStore";
-import { level0Lessons } from "@/content/modules/level-0";
-import { lesson01 } from "@/content/modules/level-0/lessons/lesson-0-1";
-import { lesson02 } from "@/content/modules/level-0/lessons/lesson-0-2";
-import { lesson03 } from "@/content/modules/level-0/lessons/lesson-0-3";
-import { lesson04 } from "@/content/modules/level-0/lessons/lesson-0-4";
-import { lesson05 } from "@/content/modules/level-0/lessons/lesson-0-5";
-import { lesson06 } from "@/content/modules/level-0/lessons/lesson-0-6";
-import { lesson07 } from "@/content/modules/level-0/lessons/lesson-0-7";
+import { useActiveCourse } from "@/content/useActiveCourse";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -26,16 +19,6 @@ import {
   BookOpen
 } from "lucide-react";
 import type { ContentBlock } from "@/types";
-
-const lessonsData: Record<string, typeof lesson01> = {
-  "what-is-a-computer": lesson01,
-  "what-is-an-operating-system": lesson02,
-  "processes-and-memory": lesson03,
-  "storage-and-files": lesson04,
-  "user-interfaces": lesson05,
-  "linux-history": lesson06,
-  "linux-vs-windows-vs-macos": lesson07,
-};
 
 function ContentBlockRenderer({ block, locale }: { block: ContentBlock; locale: string }) {
   const content = block.content[locale as "es" | "en"];
@@ -88,10 +71,23 @@ export function LessonPage() {
   const { markAsCompleted, markAsStarted, getProgress } = useProgressStore();
   const { updateStats, incrementXp, stats } = useUserStore();
 
-  const lesson = lessonsData[slug || ""] || lesson01;
-  const currentIndex = level0Lessons.findIndex((l) => l.slug === slug);
-  const prevLesson = currentIndex > 0 ? level0Lessons[currentIndex - 1] : null;
-  const nextLesson = currentIndex < level0Lessons.length - 1 ? level0Lessons[currentIndex + 1] : null;
+  const course = useActiveCourse();
+  const lesson = course.contentBySlug[slug || ""];
+  const currentIndex = course.lessons.findIndex((item) => item.slug === slug);
+  const prevLesson = currentIndex > 0 ? course.lessons[currentIndex - 1] : null;
+  const nextLesson = currentIndex >= 0 && currentIndex < course.lessons.length - 1
+    ? course.lessons[currentIndex + 1]
+    : null;
+
+  if (!lesson) {
+    return (
+      <div className="flex h-[400px] items-center justify-center">
+        <p className="text-zinc-500">
+          {locale === "es" ? "Lección no encontrada" : "Lesson not found"}
+        </p>
+      </div>
+    );
+  }
 
   const progress = getProgress("LESSON", lesson.id);
   const isCompleted = progress?.status === "COMPLETED" || progress?.status === "MASTERED";
@@ -108,9 +104,9 @@ export function LessonPage() {
     });
 
     if (nextLesson) {
-      navigate(`/courses/level-0/lessons/${nextLesson.slug}`);
+      navigate(`${course.coursePath}/lessons/${nextLesson.slug}`);
     } else {
-      navigate("/courses/level-0");
+      navigate(course.coursePath);
     }
   };
 
@@ -118,8 +114,8 @@ export function LessonPage() {
     <div className="mx-auto max-w-4xl">
       {/* Breadcrumb */}
       <div className="mb-6 flex items-center gap-2 text-sm text-zinc-500">
-        <Link to="/courses/level-0" className="hover:text-zinc-900 dark:hover:text-white">
-          {t("roadmap.level")} 0
+        <Link to={course.coursePath} className="hover:text-zinc-900 dark:hover:text-white">
+          {t("roadmap.level")} {course.level}
         </Link>
         <span>/</span>
         <span className="text-zinc-900 dark:text-white">
@@ -159,10 +155,10 @@ export function LessonPage() {
         <div className="mt-4">
           <Progress
             value={currentIndex + 1}
-            max={level0Lessons.length}
+            max={course.lessons.length}
             size="sm"
             showLabel
-            label={`${t("learning.lesson")} ${currentIndex + 1}/${level0Lessons.length}`}
+            label={`${t("learning.lesson")} ${currentIndex + 1}/${course.lessons.length}`}
           />
         </div>
       </Card>
@@ -188,7 +184,7 @@ export function LessonPage() {
       {/* Navigation */}
       <div className="flex items-center justify-between">
         {prevLesson ? (
-          <Link to={`/courses/level-0/lessons/${prevLesson.slug}`}>
+          <Link to={`${course.coursePath}/lessons/${prevLesson.slug}`}>
             <Button variant="outline">
               <ArrowLeft className="mr-2 h-4 w-4" />
               {t("learning.previousLesson")}
@@ -199,14 +195,14 @@ export function LessonPage() {
         )}
 
         {nextLesson ? (
-          <Link to={`/courses/level-0/lessons/${nextLesson.slug}`}>
+          <Link to={`${course.coursePath}/lessons/${nextLesson.slug}`}>
             <Button variant="outline">
               {t("learning.nextLesson")}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
         ) : (
-          <Link to="/courses/level-0">
+          <Link to={course.coursePath}>
             <Button variant="primary">
               {locale === "es" ? "Volver al curso" : "Back to course"}
               <ArrowRight className="ml-2 h-4 w-4" />

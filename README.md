@@ -85,7 +85,7 @@ npm run tauri build
 | Nivel | Tema | Estado |
 |-------|------|--------|
 | 0 | Fundamentos de Computación | ✅ Completo |
-| 1 | Linux Fundamentals | 🔜 Próximamente |
+| 1 | Linux Fundamentals (lecciones 1.1–1.6) | ✅ Primera parte |
 | 2-15 | ... | 🔜 Próximamente |
 
 ## Documentación

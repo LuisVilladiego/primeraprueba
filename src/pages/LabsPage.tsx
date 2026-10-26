@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useProgressStore } from "@/stores/progressStore";
-import { level0Labs } from "@/content/modules/level-0";
+import { useActiveCourse } from "@/content/useActiveCourse";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Progress } from "@/components/ui/Progress";
@@ -16,6 +16,8 @@ import {
 export function LabsPage() {
   const { t, tBilingual, locale } = useTranslation();
   const { getProgress } = useProgressStore();
+  const course = useActiveCourse();
+  const level0Labs = course.labs;
 
   const completedLabs = level0Labs.filter(
     (lab) => getProgress("LAB", lab.id)?.status === "COMPLETED"
@@ -26,11 +28,11 @@ export function LabsPage() {
       {/* Header */}
       <div className="mb-6">
         <Link 
-          to="/courses/level-0" 
+          to={course.coursePath} 
           className="mb-4 inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />
-          {locale === "es" ? "Volver al Nivel 0" : "Back to Level 0"}
+          {locale === "es" ? `Volver al Nivel ${course.level}` : `Back to Level ${course.level}`}
         </Link>
         
         <div className="flex items-start gap-4">
@@ -39,7 +41,7 @@ export function LabsPage() {
           </div>
           <div className="flex-1">
             <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-              {locale === "es" ? "Laboratorios del Nivel 0" : "Level 0 Labs"}
+              {locale === "es" ? `Laboratorios del Nivel ${course.level}` : `Level ${course.level} Labs`}
             </h1>
             <p className="mt-1 text-zinc-600 dark:text-zinc-400">
               {locale === "es" 
@@ -78,7 +80,7 @@ export function LabsPage() {
           const isCompleted = progress?.status === "COMPLETED";
 
           return (
-            <Link key={lab.id} to={`/courses/level-0/labs/${lab.slug}`}>
+            <Link key={lab.id} to={`${course.labsPath}/${lab.slug}`}>
               <Card className={`p-5 transition-all hover:shadow-md ${
                 isCompleted ? "border-green-200 dark:border-green-800/30" : ""
               }`}>

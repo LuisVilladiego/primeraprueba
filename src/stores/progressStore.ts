@@ -184,9 +184,11 @@ export const useProgressStore = create<ProgressState>()(
 
       getModuleProgress: (moduleId) => {
         const state = get();
-        const lessonIds = moduleId === "level-0" 
-          ? ["lesson-0-1", "lesson-0-2", "lesson-0-3", "lesson-0-4", "lesson-0-5", "lesson-0-6", "lesson-0-7"]
-          : [];
+        const lessonIdsByModule: Record<string, string[]> = {
+          "level-0": ["lesson-0-1", "lesson-0-2", "lesson-0-3", "lesson-0-4", "lesson-0-5", "lesson-0-6", "lesson-0-7"],
+          "level-1": ["lesson-1-1", "lesson-1-2", "lesson-1-3", "lesson-1-4", "lesson-1-5", "lesson-1-6"],
+        };
+        const lessonIds = lessonIdsByModule[moduleId] ?? [];
         
         let completed = 0;
         for (const id of lessonIds) {

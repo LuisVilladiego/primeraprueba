@@ -3,7 +3,7 @@ import { ThemeProvider } from "./components/ThemeProvider";
 import { MainLayout } from "./components/layout/MainLayout";
 import { Dashboard } from "./pages/Dashboard";
 import { Roadmap } from "./pages/Roadmap";
-import { Level0Course } from "./pages/Level0Course";
+import { Level0Course, Level1Course } from "./pages/Level0Course";
 import { LessonPage } from "./pages/LessonPage";
 import { LabsPage } from "./pages/LabsPage";
 import { LabPage } from "./pages/LabPage";
@@ -37,6 +37,11 @@ function App() {
           <Route path="/courses/level-0/labs" element={<LabsPage />} />
           <Route path="/courses/level-0/labs/:slug" element={<LabPage />} />
           <Route path="/exams/level-0" element={<ExamPage />} />
+          <Route path="/courses/level-1" element={<Level1Course />} />
+          <Route path="/courses/level-1/lessons/:slug" element={<LessonPage />} />
+          <Route path="/courses/level-1/labs" element={<LabsPage />} />
+          <Route path="/courses/level-1/labs/:slug" element={<LabPage />} />
+          <Route path="/exams/level-1" element={<ExamPage />} />
           <Route path="/terminal" element={<TerminalPage />} />
           <Route path="/achievements" element={<AchievementsPage />} />
           <Route path="/profile" element={<ProfilePage />} />

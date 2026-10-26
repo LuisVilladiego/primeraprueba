@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useProgressStore } from "@/stores/progressStore";
 import { useUserStore } from "@/stores/userStore";
-import { level0Exam } from "@/content/modules/level-0";
+import { useActiveCourse } from "@/content/useActiveCourse";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -27,6 +27,8 @@ export function ExamPage() {
   const { t, tBilingual, locale } = useTranslation();
   const { markAsCompleted, getProgress, setExamPassed } = useProgressStore();
   const { incrementXp, updateStats, stats } = useUserStore();
+  const course = useActiveCourse();
+  const level0Exam = course.exam;
 
   const [examState, setExamState] = useState<ExamState>("start");
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -96,8 +98,8 @@ export function ExamPage() {
     <div className="mx-auto max-w-4xl">
       {/* Breadcrumb */}
       <div className="mb-6 flex items-center gap-2 text-sm text-zinc-500">
-        <Link to="/courses/level-0" className="hover:text-zinc-900 dark:hover:text-white">
-          {t("roadmap.level")} 0
+        <Link to={course.coursePath} className="hover:text-zinc-900 dark:hover:text-white">
+          {t("roadmap.level")} {course.level}
         </Link>
         <span>/</span>
         <span className="text-zinc-900 dark:text-white">
@@ -299,7 +301,7 @@ export function ExamPage() {
               </Button>
             ) : (
               <>
-                <Button variant="outline" onClick={() => navigate("/courses/level-0")}>
+                <Button variant="outline" onClick={() => navigate(course.coursePath)}>
                   {locale === "es" ? "Revisar Material" : "Review Material"}
                 </Button>
                 <Button variant="primary" onClick={handleStartExam}>

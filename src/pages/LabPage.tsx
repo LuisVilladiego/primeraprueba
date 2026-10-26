@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useTranslation } from "@/hooks/useTranslation";
-import { level0Labs } from "@/content/modules/level-0";
+import { useActiveCourse } from "@/content/useActiveCourse";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { 
@@ -14,8 +14,9 @@ import {
 export function LabPage() {
   const { slug } = useParams();
   const { tBilingual, locale } = useTranslation();
+  const course = useActiveCourse();
 
-  const lab = level0Labs.find((l) => l.slug === slug);
+  const lab = course.labs.find((item) => item.slug === slug);
 
   if (!lab) {
     return (
@@ -35,11 +36,11 @@ export function LabPage() {
     <div className="mx-auto max-w-4xl">
       {/* Breadcrumb */}
       <div className="mb-6 flex items-center gap-2 text-sm text-zinc-500">
-        <Link to="/courses/level-0" className="hover:text-zinc-900 dark:hover:text-white">
-          Nivel 0
+        <Link to={course.coursePath} className="hover:text-zinc-900 dark:hover:text-white">
+          {locale === "es" ? `Nivel ${course.level}` : `Level ${course.level}`}
         </Link>
         <span>/</span>
-        <Link to="/courses/level-0/labs" className="hover:text-zinc-900 dark:hover:text-white">
+        <Link to={course.labsPath} className="hover:text-zinc-900 dark:hover:text-white">
           Labs
         </Link>
         <span>/</span>
