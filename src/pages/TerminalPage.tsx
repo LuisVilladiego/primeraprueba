@@ -24,6 +24,7 @@ export function TerminalPage() {
   const [currentPath, setCurrentPath] = useState("~");
   const [username, setUsername] = useState("user");
   const [hostname, setHostname] = useState("pinguinono");
+  const [backend, setBackend] = useState<"linux" | "wsl" | "missing" | "browser">("browser");
   const [isExecuting, setIsExecuting] = useState(false);
   
   const inputRef = useRef<HTMLInputElement>(null);
@@ -42,21 +43,31 @@ export function TerminalPage() {
 
   const initTerminal = async () => {
     try {
-      const [user, host, path] = await Promise.all([
+      const [user, host, path, detected] = await Promise.all([
         invoke<string>("get_username"),
         invoke<string>("get_hostname"),
         invoke<string>("get_current_directory"),
+        invoke<string>("get_terminal_backend"),
       ]);
+      const shell = detected === "wsl" || detected === "missing" ? detected : "linux";
+      setBackend(shell);
       setUsername(user);
       setHostname(host);
       setCurrentPath(path);
-      
-      setHistory([{
-        type: "output",
-        content: locale === "es" 
+
+      const welcome = shell === "wsl"
+        ? (locale === "es"
+          ? `¡Bienvenido a Pinguiñoño Terminal, ${user}!\nEsta es una terminal Linux real, ejecutada con WSL.\nLos comandos funcionan igual que en la versión de Linux.\nEscribe 'help' para ver comandos sugeridos.\n`
+          : `Welcome to Pinguiñoño Terminal, ${user}!\nThis is a real Linux terminal, running through WSL.\nCommands work the same way as in the Linux version.\nType 'help' for suggested commands.\n`)
+        : shell === "missing"
+        ? (locale === "es"
+          ? "Falta el Linux de Windows (WSL).\nAbre PowerShell y ejecuta: wsl --install\nReinicia el equipo y abre Pinguiñoño otra vez.\n"
+          : "Windows Linux (WSL) is missing.\nOpen PowerShell and run: wsl --install\nRestart the computer and open Pinguiñoño again.\n")
+        : (locale === "es"
           ? `¡Bienvenido a Pinguiñoño Terminal, ${user}!\nEsta es una terminal REAL de tu sistema Linux.\nEscribe 'help' para ver comandos sugeridos.\n`
-          : `Welcome to Pinguiñoño Terminal, ${user}!\nThis is a REAL terminal from your Linux system.\nType 'help' for suggested commands.\n`,
-      }]);
+          : `Welcome to Pinguiñoño Terminal, ${user}!\nThis is a REAL terminal from your Linux system.\nType 'help' for suggested commands.\n`);
+
+      setHistory([{ type: "output", content: welcome }]);
     } catch {
       setHistory([{
         type: "output",
@@ -235,9 +246,11 @@ export function TerminalPage() {
               </span>
             </div>
             <p className="text-zinc-600 dark:text-zinc-400">
-              {locale === "es" 
-                ? "Terminal nativa de tu sistema Linux" 
-                : "Native terminal from your Linux system"}
+              {backend === "wsl"
+                ? (locale === "es" ? "Terminal Linux real mediante WSL" : "Real Linux terminal through WSL")
+                : backend === "missing"
+                ? (locale === "es" ? "Instala WSL para activar la terminal Linux" : "Install WSL to enable the Linux terminal")
+                : (locale === "es" ? "Terminal nativa de tu sistema Linux" : "Native terminal from your Linux system")}
             </p>
           </div>
         </div>
@@ -315,9 +328,17 @@ export function TerminalPage() {
               </h3>
             </div>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              {locale === "es"
-                ? "Esta es una terminal REAL conectada a tu sistema Linux. Los comandos que ejecutes afectarán tu sistema."
-                : "This is a REAL terminal connected to your Linux system. Commands you run will affect your system."}
+              {backend === "wsl"
+                ? (locale === "es"
+                  ? "Los comandos se ejecutan dentro de Linux (WSL). Afectan a ese Linux, igual que en la versión de Linux."
+                  : "Commands run inside Linux (WSL). They affect that Linux, the same way as the Linux version.")
+                : backend === "missing"
+                ? (locale === "es"
+                  ? "En PowerShell ejecuta wsl --install, reinicia Windows y vuelve a abrir la aplicación."
+                  : "In PowerShell run wsl --install, restart Windows, and open the app again.")
+                : (locale === "es"
+                  ? "Esta es una terminal REAL conectada a tu sistema Linux. Los comandos que ejecutes afectarán tu sistema."
+                  : "This is a REAL terminal connected to your Linux system. Commands you run will affect your system.")}
             </p>
           </Card>
 
