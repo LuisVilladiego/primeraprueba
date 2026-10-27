@@ -1,0 +1,12 @@
+{
+  "productName": "pinguinono",
+  "bundle": {
+    "active": true,
+    "targets": ["deb"],
+    "linux": {
+      "deb": {
+        "desktopTemplate": "./linux/pinguinono.desktop.hbs"
+      }
+    }
+  }
+}
