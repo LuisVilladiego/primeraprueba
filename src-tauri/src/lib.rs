@@ -9,6 +9,7 @@ struct TerminalState {
     backend: &'static str,
 }
 
+#[cfg(any(windows, test))]
 fn bash_single_quote(value: &str) -> String {
     format!("'{}'", value.replace('\'', "'\\''"))
 }

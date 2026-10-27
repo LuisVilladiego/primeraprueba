@@ -1,6 +1,8 @@
-# Pinguiñoño para Windows
+# Pinguiñoño 1.0.2 para Windows
 
-Esta carpeta contiene el instalador de la misma aplicación que en Linux: lecciones, quizzes, exámenes, tema claro/oscuro y la terminal.
+Esta versión abre el nivel 1 y los siguientes. Si el roadmap dice «Próximamente» en Linux Fundamentals, estás en la versión anterior: instala este archivo de nuevo.
+
+La carpeta contiene el instalador de la misma aplicación que en Linux: lecciones, quizzes, exámenes, tema claro/oscuro y la terminal.
 
 ## Instalar
 
